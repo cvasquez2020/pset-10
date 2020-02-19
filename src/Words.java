@@ -4,23 +4,26 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException; 
-import com.fasterxml.jackson.annotation.JsonProperty;;
 
+import java.util.Collection;
+import java.util.Collections;
 public class Words {
 	
-	@JsonProperty("word")
 	public String word;
-	@JsonProperty("definitions")
-	ArrayList<String> definitions = new ArrayList<String>(); 
-	//ArrayList<String> partsOfSpeech = new ArrayList<String>(); 
+	ArrayList<Definitions> definitions = new ArrayList<Definitions>(); 
 	ArrayList<String> synonyms = new ArrayList<String>();
 	ArrayList<String> antonyms = new ArrayList<String>();
 	
-	public Words(String word ) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
-		Words[] allWords = new Gson().fromJson(new FileReader("C:\\Users\\Acexa\\Desktop\\APCSA\\pset-10\\JSON\\words.json"), Words[].class);
+	public Words(String word, Definitions definitions, ArrayList<String> synonoyms, ArrayList<String> antonyms) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+		//Words[] allWords = new Gson().fromJson(new FileReader("C:\\Users\\Acexa\\Desktop\\APCSA\\pset-10\\JSON\\words.json"), Words[].class);
+		this.word = word;
+		this.definitions.add(definitions);
+		Collections.copy(this.synonyms, synonyms);
+		Collections.copy(this.antonyms, antonyms);
+	
 	}
-	public void setDefinition(String definition, String partsOfSpeech) {
-		this.definitions.add(definition);
+	public void setDefinition(Definitions definitions, String partsOfSpeech) {
+		this.definitions.add(definitions);
 		//this.partsOfSpeech.add(partsOfSpeech);
 	}
 	public void addSynonym(String synonym) {
