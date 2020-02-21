@@ -62,12 +62,14 @@ import javafx.stage.Stage;
 	            filteredData.setPredicate(s -> s.contains(filter));
 	        }
 	    });
-
-
-	    BorderPane content = new BorderPane(new ListView<>(filteredData));
+	    
+	    ListView<String> list = new ListView<String>(filteredData);
+	    BorderPane content = new BorderPane();
+	    content.setLeft(list);
 	    content.setBottom(filterInput);
-
+	    BorderPane.setMargin(list, new Insets(0,50,0,0));
 	    Scene scene = new Scene(content, 500, 500);
+	    
 	    primaryStage.setScene(scene);
 	    primaryStage.show();
 	}
