@@ -5,6 +5,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
 import javafx.application.Application;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -21,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.application.Application;
@@ -35,12 +37,31 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+
 	public class Interface extends Application {
 	
 		Button button;
 		
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
-		Dictionary.addAllWords();
+		Dictionary.addAllWords(0);
 		launch(args);
 	}
 	
@@ -62,12 +83,21 @@ import javafx.stage.Stage;
 	            filteredData.setPredicate(s -> s.contains(filter));
 	        }
 	    });
-	    
+	    int leftMenu = 200;
 	    ListView<String> list = new ListView<String>(filteredData);
 	    BorderPane content = new BorderPane();
+	    list.getSelectionModel().selectedItemProperty()
+        .addListener(new ChangeListener<String>() {
+          public void changed(ObservableValue<? extends String> observable,
+              String oldValue, String newValue) {
+            System.out.println("selection changed");  
+          }
+        });
 	    content.setLeft(list);
+	    list.setPrefWidth(leftMenu);
 	    content.setBottom(filterInput);
-	    BorderPane.setMargin(list, new Insets(0,50,0,0));
+	    filterInput.setPrefWidth(leftMenu);
+	    BorderPane.setMargin(list, new Insets(0,300,0,0));
 	    Scene scene = new Scene(content, 500, 500);
 	    
 	    primaryStage.setScene(scene);
