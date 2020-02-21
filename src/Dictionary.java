@@ -16,8 +16,9 @@ import com.google.gson.stream.JsonReader;
 
 public class Dictionary {
 	public static Words[] wordList;
-	public static void addAllWords(int sort) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+	public static Words[] addAllWords() throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		wordList = new Gson().fromJson(new FileReader(".\\JSON\\words.json"), Words[].class);
+		return wordList;
 	}
 	
 	public static ArrayList<String> listWords() {

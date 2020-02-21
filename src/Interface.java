@@ -1,4 +1,5 @@
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 import com.google.gson.JsonIOException;
@@ -61,7 +62,7 @@ import javafx.util.Callback;
 		Button button;
 		
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
-		Dictionary.addAllWords(0);
+		Dictionary.addAllWords();
 		launch(args);
 	}
 	
@@ -90,7 +91,27 @@ import javafx.util.Callback;
         .addListener(new ChangeListener<String>() {
           public void changed(ObservableValue<? extends String> observable,
               String oldValue, String newValue) {
-            System.out.println("selection changed");  
+            int index = Dictionary.listWords().indexOf(list.getSelectionModel().getSelectedItem());
+            Words[] wordList = null;
+            try {
+				wordList = Dictionary.addAllWords();
+			} catch (JsonSyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonIOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+           ArrayList<Definitions> definitions = wordList[index].getDefintion();
+           for (Definitions def : definitions) {
+        	   
+        	   System.out.println(def.getPartOfSpeech() + "\n" + def.getDefinition() + "\n");
+        	   
+           }
           }
         });
 	    content.setLeft(list);

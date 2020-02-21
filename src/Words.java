@@ -32,6 +32,9 @@ public class Words {
 	public String getSpelling() {
 		return this.word;
 	}
+	public ArrayList<Definitions> getDefintion() {
+		return this.definitions;
+	}
 
 
 }

@@ -15,5 +15,10 @@ public class Definitions {
 		this.partOfSpeech = partsOfSpeech;
 	}
 
-
+	public String getDefinition() {
+		return this.definition;
+	}
+	public String getPartOfSpeech() {
+		return this.partOfSpeech;
+	}
 }
