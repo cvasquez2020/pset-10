@@ -35,6 +35,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -73,7 +74,7 @@ import javafx.util.Callback;
 	    Dictionary.listWords().forEach(data::add);
 
 	    FilteredList<String> filteredData = new FilteredList<>(data, s -> true);
-
+	    Text text = new Text("Definition: ");
 	    TextField filterInput = new TextField();
 	    filterInput.textProperty().addListener(obs->{
 	        String filter = filterInput.getText(); 
@@ -108,17 +109,33 @@ import javafx.util.Callback;
             
            ArrayList<Definitions> definitions = wordList[index].getDefintion();
            for (Definitions def : definitions) {
+        	   text.setText(def.getDefinition());
         	   
-        	   System.out.println(def.getPartOfSpeech() + "\n" + def.getDefinition() + "\n");
         	   
            }
           }
         });
+	    
+	    text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18)); 
+	       
+	      //setting the position of the text  
+	      text.setX(50); 
+	      text.setY(130);     
+	       
+	      //Setting the color 
+	      text.setFill(Color.BLACK); 
+	       
+	      //Setting the Stroke  
+	      text.setStrokeWidth(2); 
+	      
+	      // Setting the stroke color
+	      text.setStroke(Color.BLUE);        
+	   content.setRight(text);
 	    content.setLeft(list);
 	    list.setPrefWidth(leftMenu);
 	    content.setBottom(filterInput);
 	    filterInput.setPrefWidth(leftMenu);
-	    BorderPane.setMargin(list, new Insets(0,300,0,0));
+	    
 	    Scene scene = new Scene(content, 500, 500);
 	    
 	    primaryStage.setScene(scene);
