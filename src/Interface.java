@@ -4,6 +4,7 @@ import java.util.stream.IntStream;
 
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+//import com.sun.org.apache.xalan.internal.xsltc.runtime.Node;
 
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
@@ -64,6 +65,7 @@ import javafx.util.Callback;
 		
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		Dictionary.addAllWords();
+		
 		launch(args);
 	}
 	
@@ -85,9 +87,10 @@ import javafx.util.Callback;
 	            filteredData.setPredicate(s -> s.contains(filter));
 	        }
 	    });
-	    int leftMenu = 200;
+	    int leftMenu = 100;
 	    ListView<String> list = new ListView<String>(filteredData);
 	    BorderPane content = new BorderPane();
+	    content.setPadding(new Insets(12,12,12,12));
 	    list.getSelectionModel().selectedItemProperty()
         .addListener(new ChangeListener<String>() {
           public void changed(ObservableValue<? extends String> observable,
@@ -116,20 +119,19 @@ import javafx.util.Callback;
           }
         });
 	    
-	    text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18)); 
+	    text.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 10)); 
 	       
 	      //setting the position of the text  
-	      text.setX(50); 
+	      
 	      text.setY(130);     
 	       
 	      //Setting the color 
 	      text.setFill(Color.BLACK); 
 	       
 	      //Setting the Stroke  
-	      text.setStrokeWidth(2); 
+	      text.setStrokeWidth(1); 
 	      
-	      // Setting the stroke color
-	      text.setStroke(Color.BLUE);        
+	    
 	   content.setRight(text);
 	    content.setLeft(list);
 	    list.setPrefWidth(leftMenu);
