@@ -36,7 +36,4 @@ public class Dictionary {
 		//TODO implement deleting words
 	}
 	
-	private void search () {
-		//TODO implement search
-	}
 }

@@ -75,12 +75,13 @@ import javafx.util.Callback;
 	
 	@Override
 	public void start(Stage primaryStage) {
-		
+		VBox right = new VBox();
 	    ObservableList<String> data = FXCollections.observableArrayList();
 	    Dictionary.listWords().forEach(data::add);
 
 	    FilteredList<String> filteredData = new FilteredList<>(data, s -> true);
-	    Text spelling = new Text("Definition: ");
+	    Text spelling = new Text();
+	 
 	    TextField filterInput = new TextField();
 	    filterInput.textProperty().addListener(obs->{
 	        String filter = filterInput.getText(); 
@@ -110,8 +111,17 @@ import javafx.util.Callback;
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-            
+            right.getChildren().clear();
            spelling.setText(wordList[index].getSpelling());
+           right.getChildren().addAll(spelling);
+          
+           ArrayList<Definitions> definitions = new ArrayList<Definitions>();
+           definitions = wordList[index].getDefintion();
+           for (Definitions def : definitions) {
+        	   
+        	   right.getChildren().addAll(new Text(def.getPartOfSpeech()));
+        	   right.getChildren().addAll(new Text(def.getDefinition()));
+           }
            
           }
         });
@@ -127,17 +137,18 @@ import javafx.util.Callback;
 	    
 	      Separator separator2 = new Separator();
 	      separator2.setOrientation(Orientation.VERTICAL);
-	      spelling.setStrokeWidth(1); 
+	      spelling.setStrokeWidth(2); 
 	      Button addWord = new Button("Add");
 	      Button rmWord = new Button("Remove");
 	      HBox buttons = new HBox(addWord, rmWord);
 	      
 	      list.setPrefWidth(150);
 	      list.setPrefHeight(maxHeight);
-	      VBox right = new VBox(spelling);
+	      
 	      
 	      VBox left = new VBox(buttons,filterInput,check,separator1,list);
 	      left.setSpacing(5);
+	      right.setSpacing(10);
 	      left.setPadding(new Insets(2,2,2,2));
 	      HBox both = new HBox(left,right);
 	      both.setSpacing(20);
