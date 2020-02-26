@@ -91,7 +91,7 @@ import javafx.util.Callback;
 	            filteredData.setPredicate(s -> s.contains(filter));
 	        }
 	    });
-	    int leftMenu = 100;
+	    int maxHeight = 600;
 	    ListView<String> list = new ListView<String>(filteredData);
 	    GridPane content = new GridPane();
 	    content.setPadding(new Insets(5,10,5,5));
@@ -133,20 +133,20 @@ import javafx.util.Callback;
 	      HBox buttons = new HBox(addWord, rmWord);
 	      
 	      list.setPrefWidth(150);
-	      list.setPrefHeight(999);
+	      list.setPrefHeight(maxHeight);
 	      VBox right = new VBox(spelling);
 	      
 	      VBox left = new VBox(buttons,filterInput,check,separator1,list);
 	      left.setSpacing(5);
 	      left.setPadding(new Insets(2,2,2,2));
-	      content.add(left, 0,1);
-	      content.add(right, 1, 1);
-	      filterInput.setPrefWidth(leftMenu);
+	      HBox both = new HBox(left,right);
+	      both.setSpacing(20);
+	      content.add(both,0,0);
 	      
-	    Scene scene = new Scene(content, 900, 600);
+	      Scene scene = new Scene(content, 900, maxHeight);
 	    
-	    primaryStage.setScene(scene);
-	    primaryStage.show();
+	      primaryStage.setScene(scene);
+	      primaryStage.show();
 	}
 	
 }
