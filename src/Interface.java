@@ -1,11 +1,9 @@
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
-
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-//import com.sun.org.apache.xalan.internal.xsltc.runtime.Node;
-
+import javafx.scene.control.CheckBox;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -14,17 +12,20 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.application.Application;
@@ -56,6 +57,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.HLineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -76,7 +80,7 @@ import javafx.util.Callback;
 	    Dictionary.listWords().forEach(data::add);
 
 	    FilteredList<String> filteredData = new FilteredList<>(data, s -> true);
-	    Text text = new Text("Definition: ");
+	    Text spelling = new Text("Definition: ");
 	    TextField filterInput = new TextField();
 	    filterInput.textProperty().addListener(obs->{
 	        String filter = filterInput.getText(); 
@@ -89,8 +93,8 @@ import javafx.util.Callback;
 	    });
 	    int leftMenu = 100;
 	    ListView<String> list = new ListView<String>(filteredData);
-	    BorderPane content = new BorderPane();
-	    content.setPadding(new Insets(12,12,12,12));
+	    GridPane content = new GridPane();
+	    content.setPadding(new Insets(5,10,5,5));
 	    list.getSelectionModel().selectedItemProperty()
         .addListener(new ChangeListener<String>() {
           public void changed(ObservableValue<? extends String> observable,
@@ -100,45 +104,46 @@ import javafx.util.Callback;
             try {
 				wordList = Dictionary.addAllWords();
 			} catch (JsonSyntaxException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JsonIOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
             
-           ArrayList<Definitions> definitions = wordList[index].getDefintion();
-           for (Definitions def : definitions) {
-        	   text.setText(def.getDefinition());
-        	   
-        	   
-           }
+           spelling.setText(wordList[index].getSpelling());
+           
           }
         });
 	    
-	    text.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 10)); 
-	       
-	      //setting the position of the text  
-	      
-	      text.setY(130);     
-	       
-	      //Setting the color 
-	      text.setFill(Color.BLACK); 
-	       
-	      //Setting the Stroke  
-	      text.setStrokeWidth(1); 
-	      
+	    spelling.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 36)); 
+; 
+	      CheckBox asc = new CheckBox("asc");
+	      CheckBox desc = new CheckBox("desc");
+	      HBox check = new HBox(asc,desc);
 	    
-	   content.setRight(text);
-	    content.setLeft(list);
-	    list.setPrefWidth(leftMenu);
-	    content.setBottom(filterInput);
-	    filterInput.setPrefWidth(leftMenu);
+	      spelling.setFill(Color.BLACK); 
+	      Separator separator1 = new Separator();
 	    
-	    Scene scene = new Scene(content, 500, 500);
+	      Separator separator2 = new Separator();
+	      separator2.setOrientation(Orientation.VERTICAL);
+	      spelling.setStrokeWidth(1); 
+	      Button addWord = new Button("Add");
+	      Button rmWord = new Button("Remove");
+	      HBox buttons = new HBox(addWord, rmWord);
+	      
+	      list.setPrefWidth(150);
+	      list.setPrefHeight(999);
+	      VBox right = new VBox(spelling);
+	      
+	      VBox left = new VBox(buttons,filterInput,check,separator1,list);
+	      left.setSpacing(5);
+	      left.setPadding(new Insets(2,2,2,2));
+	      content.add(left, 0,1);
+	      content.add(right, 1, 1);
+	      filterInput.setPrefWidth(leftMenu);
+	      
+	    Scene scene = new Scene(content, 900, 600);
 	    
 	    primaryStage.setScene(scene);
 	    primaryStage.show();
