@@ -117,18 +117,12 @@ import javafx.util.Callback;
             	spelling.setText(wordList[index].getSpelling());
             	right.getChildren().addAll(spelling);
             	definitions = wordList[index].getDefintion();
-
             }
            
-                     
-        
-           if (index >= 0) {
-        	   
-           }
            
            for (Definitions def : definitions) {
         	   
-        	   right.getChildren().addAll(new Text(def.getPartOfSpeech()));
+        	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " +def.getPartOfSpeech()));
         	   right.getChildren().addAll(new Text(def.getDefinition()));
            }
           
@@ -139,7 +133,7 @@ import javafx.util.Callback;
 ; 
 	      CheckBox asc = new CheckBox("asc");
 	      CheckBox desc = new CheckBox("desc");
-	      HBox check = new HBox(asc,desc);
+	      HBox check = new HBox(asc, desc);
 	    
 	      spelling.setFill(Color.BLACK); 
 	      Separator separator1 = new Separator();
