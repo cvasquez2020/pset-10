@@ -95,6 +95,7 @@ import javafx.util.Callback;
 	    int maxHeight = 600;
 	    ListView<String> list = new ListView<String>(filteredData);
 	    GridPane content = new GridPane();
+	    
 	    content.setPadding(new Insets(5,10,5,5));
 	    list.getSelectionModel().selectedItemProperty()
         .addListener(new ChangeListener<String>() {
@@ -122,8 +123,8 @@ import javafx.util.Callback;
            
            for (Definitions def : definitions) {
         	   
-        	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " +def.getPartOfSpeech()));
-        	   right.getChildren().addAll(new Text(def.getDefinition()));
+        	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " + wordList[index].getSpelling() + " (" + def.getPartOfSpeech() + ")"));
+        	   right.getChildren().addAll(new Text("\t"+ def.getDefinition()));
            }
           
           }
@@ -153,11 +154,12 @@ import javafx.util.Callback;
 	      left.setSpacing(5);
 	      right.setSpacing(10);
 	      left.setPadding(new Insets(2,2,2,2));
+	      GridPane.setMargin(right, new Insets(2,10,2,2));
 	      HBox both = new HBox(left,right);
 	      both.setSpacing(20);
 	      content.add(both,0,0);
 	      
-	      Scene scene = new Scene(content, 900, maxHeight);
+	      Scene scene = new Scene(content, 1100, maxHeight);
 	    
 	      primaryStage.setScene(scene);
 	      primaryStage.show();
