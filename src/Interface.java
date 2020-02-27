@@ -122,8 +122,8 @@ import javafx.util.Callback;
            
            for (Definitions def : definitions) {
         	   
-        	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " + wordList[index].getSpelling() + " (" + def.getPartOfSpeech() + ")"));
-        	   right.getChildren().addAll(new Text("\t"+ def.getDefinition()));
+        	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " +def.getPartOfSpeech()));
+        	   right.getChildren().addAll(new Text(def.getDefinition()));
            }
           
           }
