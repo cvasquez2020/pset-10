@@ -123,7 +123,7 @@ import javafx.util.Callback;
 				e.printStackTrace();
 			}
             
-            //Word word = WordLis
+            //Word word = WordList[indexOf()]
              
             ArrayList<Definitions> definitions = new ArrayList<Definitions>();
 
