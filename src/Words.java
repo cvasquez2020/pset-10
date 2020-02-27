@@ -35,6 +35,11 @@ public class Words {
 	public ArrayList<Definitions> getDefintion() {
 		return this.definitions;
 	}
-
+	public ArrayList<String> getSynonyms() {
+		return this.synonyms;
+	}
+	public ArrayList<String> getAntonyms() {
+		return this.antonyms;
+	}
 
 }
