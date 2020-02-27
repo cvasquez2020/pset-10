@@ -111,18 +111,27 @@ import javafx.util.Callback;
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-            right.getChildren().clear();
-           spelling.setText(wordList[index].getSpelling());
-           right.getChildren().addAll(spelling);
-          
-           ArrayList<Definitions> definitions = new ArrayList<Definitions>();
-           definitions = wordList[index].getDefintion();
+            ArrayList<Definitions> definitions = new ArrayList<Definitions>();
+            if (index >= 0) {
+            	right.getChildren().clear();
+            	spelling.setText(wordList[index].getSpelling());
+            	right.getChildren().addAll(spelling);
+            	definitions = wordList[index].getDefintion();
+
+            }
+           
+                     
+        
+           if (index >= 0) {
+        	   
+           }
+           
            for (Definitions def : definitions) {
         	   
         	   right.getChildren().addAll(new Text(def.getPartOfSpeech()));
         	   right.getChildren().addAll(new Text(def.getDefinition()));
            }
-           
+          
           }
         });
 	    
