@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
@@ -68,7 +69,8 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 	public class Interface extends Application {
-	
+		static int lastIndex = -1;
+		static String lastWord = "";
 		Button button;
 		
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
@@ -79,6 +81,7 @@ import javafx.util.Callback;
 	
 	@Override
 	public void start(Stage primaryStage) {
+		
 		VBox right = new VBox();
 	    ObservableList<String> data = FXCollections.observableArrayList();
 	    Dictionary.listWords().forEach(data::add);
@@ -101,17 +104,27 @@ import javafx.util.Callback;
 	            filteredData.setPredicate(s -> s.contains(filter));
 	        }
 	    });
+	    List<String> wordsDisplayed = filteredData;
+	    
 	    int maxHeight = 600;
 	    ListView<String> list = new ListView<String>(filteredData);
 	    GridPane content = new GridPane();
 	    
-	    content.setPadding(new Insets(5,10,5,5));
+	    content.setPadding(new Insets(5, 10, 5, 5));
 	    
 	    list.getSelectionModel().selectedItemProperty()
         .addListener(new ChangeListener<String>() {
           public void changed(ObservableValue<? extends String> observable,
               String oldValue, String newValue) {
-            int index = Dictionary.listWords().indexOf(list.getSelectionModel().getSelectedItem());
+        	if (lastIndex != -1) {
+        		
+        		lastWord = Dictionary.listWords().get(lastIndex);
+        		if (true) {
+        			right.getChildren().clear();
+        		}
+        	}
+            int index = wordsDisplayed.indexOf(list.getSelectionModel().getSelectedItem());
+            lastIndex= index;
             Words[] wordList = null;
             try {
 				wordList = Dictionary.addAllWords();
@@ -123,7 +136,7 @@ import javafx.util.Callback;
 				e.printStackTrace();
 			}
             
-            //Word word = WordList[indexOf()]
+           //Word currentWord = list.(list.getSelectionModel().getSelectedItem())].indexOf();
              
             ArrayList<Definitions> definitions = new ArrayList<Definitions>();
 
