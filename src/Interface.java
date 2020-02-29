@@ -104,7 +104,7 @@ import javafx.util.Callback;
 	            filteredData.setPredicate(s -> s.contains(filter));
 	        }
 	    });
-	    List<String> wordsDisplayed = filteredData;
+	    List<String> wordsDisplayed = data;
 	    
 	    int maxHeight = 600;
 	    ListView<String> list = new ListView<String>(filteredData);
