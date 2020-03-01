@@ -24,7 +24,7 @@ public class Dictionary {
 	public static ArrayList<String> listSpellings(Boolean ascending) {
 		ArrayList<String> listOfWords = new ArrayList<String>();
 		
-		for(Words word : wordList) {
+		for (Words word : wordList) {
 			listOfWords.add(word.getSpelling());
 		}
 		
@@ -35,6 +35,27 @@ public class Dictionary {
 		}
 		return listOfWords;
 	}
+	
+	//@SuppressWarnings("null")
+	public static ArrayList<Words> sortObj(Boolean ascending) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+		
+		ArrayList<String> sortedSpellings = listSpellings(ascending);
+		wordList = addAllWords();
+		ArrayList<Words> sortedObj = new ArrayList<Words>();
+		for (int i = 0; sortedObj.size() < wordList.length; i++) {
+		
+			for (Words word : wordList) {
+				if (sortedSpellings.get(i).equals(word.getSpelling())) {
+					sortedObj.add(word);
+					break;
+				}
+				
+		}
+		
+	}
+		return sortedObj;	
+	}
+	
 	private void addWord() {
 		//TODO implement adding words
 	}

@@ -89,10 +89,10 @@ import javafx.scene.paint.Color;
 		public void changed(ObservableValue<? extends String> observable,
               String oldValue, String newValue) {
 			
-            Words[] wordList = null;
+            ArrayList<Words> wordList = null;
             
             try {
-				wordList = Dictionary.addAllWords();
+				wordList = Dictionary.sortObj(ascending);
 			} catch (JsonSyntaxException e) {
 				e.printStackTrace();
 			} catch (JsonIOException e) {
@@ -112,20 +112,20 @@ import javafx.scene.paint.Color;
             ArrayList<String> antonyms = new ArrayList<String>();
             if (index >= 0) {
             	right.getChildren().clear();
-            	spelling.setText(wordList[index].getSpelling());
-            	lastWord = wordList[index].getSpelling();
+            	spelling.setText(wordList.get(index).getSpelling());
+            	lastWord = wordList.get(index).getSpelling();
             	right.getChildren().addAll(spelling);
             	right.getChildren().addAll(defHeader);
-            	definitions = wordList[index].getDefintion();
+            	definitions = wordList.get(index).getDefintion();
             }
             
            for (Definitions def : definitions) {
-        	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " + wordList[index].getSpelling() + " (" + def.getPartOfSpeech() + ")"));
+        	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " + wordList.get(index).getSpelling() + " (" + def.getPartOfSpeech() + ")"));
         	   right.getChildren().addAll(new Text("\t" + def.getDefinition()));
            }
           
            if (index >= 0) {
-           synonyms = wordList[index].getSynonyms();
+           synonyms = wordList.get(index).getSynonyms();
            for (String syn : synonyms) {
         	   right.getChildren().addAll(new Text("\t" + ((int) synonyms.indexOf(syn) + 1) + ". " +  syn));
            }
@@ -134,7 +134,7 @@ import javafx.scene.paint.Color;
           
            
            if (index >= 0) {
-        	   antonyms = wordList[index].getAntonyms();
+        	   antonyms = wordList.get(index).getAntonyms();
                
                right.getChildren().add(antHeader);
               for (String ant : antonyms) {

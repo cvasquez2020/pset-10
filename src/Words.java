@@ -7,7 +7,8 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.Collections;
 public class Words {
-	
+	private int wordId;
+	public static int nextId = -1;
 	public String word;
 	ArrayList<Definitions> definitions = new ArrayList<Definitions>(); 
 	ArrayList<String> synonyms = new ArrayList<String>();
@@ -18,6 +19,8 @@ public class Words {
 		this.definitions.add(definitions);
 		Collections.copy(this.synonyms, synonyms);
 		Collections.copy(this.antonyms, antonyms);
+		this.wordId = nextId + 1;
+		nextId++;
 	
 	}
 	public void setDefinition(Definitions definitions) {
@@ -32,6 +35,11 @@ public class Words {
 	public String getSpelling() {
 		return this.word;
 	}
+	
+	public int getId() {
+		return this.wordId;
+	}
+	
 	public ArrayList<Definitions> getDefintion() {
 		return this.definitions;
 	}
