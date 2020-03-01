@@ -1,10 +1,9 @@
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import com.sun.glass.events.MouseEvent;
+
 
 import javafx.scene.control.CheckBox;
 import javafx.application.Application;
@@ -12,64 +11,32 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.layout.GridPane;
+
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.GridPane;
+
 import javafx.scene.paint.Color;
-import javafx.scene.shape.HLineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.stage.Stage;
-import javafx.util.Callback;
+
 
 	public class Interface extends Application {
-		static int lastIndex = -1;
 		static String lastWord = "";
 		static int index;
 		Button button;
@@ -84,12 +51,8 @@ import javafx.util.Callback;
 	
 	@Override
 	public void start(Stage primaryStage) {
-		
 		VBox right = new VBox();
-	    
 	    Dictionary.listWords().forEach(data::add);
-
-	   // FilteredList<String> filteredData = new FilteredList<>(data, s -> true);
 	    Text spelling = new Text();
 	    Text defHeader = new Text("Definitions");
 	    Text synHeader = new Text("Synonyms");
@@ -111,7 +74,7 @@ import javafx.util.Callback;
 	    List<String> currentWordList = data;
 	    
 	    int maxHeight = 600;
-	    //ListView<String> list = new ListView<String>(filteredData);
+	   
 	    index = -1;
 	    GridPane content = new GridPane();
 	    
@@ -127,7 +90,7 @@ import javafx.util.Callback;
             
             
             Words[] wordList = null;
-            ArrayList<Words> wordsShown = new ArrayList<Words>();
+            
             try {
 				wordList = Dictionary.addAllWords();
 			} catch (JsonSyntaxException e) {
@@ -137,18 +100,11 @@ import javafx.util.Callback;
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-            for (Words word : wordList) {
-            	for (String shown : currentWordList) {
-            		if (word.getSpelling().equals(shown)) {
-            			wordsShown.add(word);
-            		}
-            	}
-            	
-            }
+          
             
             index = currentWordList.indexOf(list.getSelectionModel().getSelectedItem());
             
-            lastIndex = index;
+            
            
             ArrayList<Definitions> definitions = new ArrayList<Definitions>();
 
@@ -233,7 +189,7 @@ import javafx.util.Callback;
 	                    right.setLayoutY(-new_val.doubleValue());
 	            }
 	        });
-	        list.getSelectionModel().clearSelection();
+	      list.getSelectionModel().clearSelection();
 	      primaryStage.setScene(scene);
 	      primaryStage.show();
 	}
