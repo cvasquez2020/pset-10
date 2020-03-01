@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-
-
 import javafx.scene.control.CheckBox;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
@@ -70,8 +68,10 @@ import javafx.scene.paint.Color;
 	        else {
 	            filteredData.setPredicate(s -> s.contains(filter));
 	        }
+	        
 	    });
-	    List<String> currentWordList = data;
+	    
+	    List<String> currentWordList = filteredData;
 	    
 	    int maxHeight = 600;
 	   
@@ -86,9 +86,6 @@ import javafx.scene.paint.Color;
 		public void changed(ObservableValue<? extends String> observable,
               String oldValue, String newValue) {
 			
-        	
-            
-            
             Words[] wordList = null;
             
             try {
@@ -100,12 +97,11 @@ import javafx.scene.paint.Color;
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-          
-            
+            if (!currentWordList.contains(lastWord)) {
+		    	right.getChildren().clear();
+		    }
             index = currentWordList.indexOf(list.getSelectionModel().getSelectedItem());
-            
-            
-           
+
             ArrayList<Definitions> definitions = new ArrayList<Definitions>();
 
             ArrayList<String> synonyms = new ArrayList<String>();
@@ -114,12 +110,12 @@ import javafx.scene.paint.Color;
             if (index >= 0) {
             	right.getChildren().clear();
             	spelling.setText(wordList[index].getSpelling());
+            	lastWord = wordList[index].getSpelling();
             	right.getChildren().addAll(spelling);
             	right.getChildren().addAll(defHeader);
             	definitions = wordList[index].getDefintion();
             }
-           
-           
+            
            for (Definitions def : definitions) {
         	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " + wordList[index].getSpelling() + " (" + def.getPartOfSpeech() + ")"));
         	   right.getChildren().addAll(new Text("\t" + def.getDefinition()));
@@ -142,8 +138,10 @@ import javafx.scene.paint.Color;
             	  right.getChildren().addAll(new Text("\t" +  ((int) antonyms.indexOf(ant) + 1) + ". " + ant));
               }
            }
-           
-           
+           System.out.println(currentWordList);
+            if (!currentWordList.contains(lastWord)) {
+            	right.getChildren().clear();
+            }
           }
         });
 	    
@@ -189,6 +187,7 @@ import javafx.scene.paint.Color;
 	                    right.setLayoutY(-new_val.doubleValue());
 	            }
 	        });
+	       
 	      list.getSelectionModel().clearSelection();
 	      primaryStage.setScene(scene);
 	      primaryStage.show();
