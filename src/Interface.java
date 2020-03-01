@@ -71,8 +71,11 @@ import javafx.util.Callback;
 	public class Interface extends Application {
 		static int lastIndex = -1;
 		static String lastWord = "";
+		static int index;
 		Button button;
-		
+		ObservableList<String> data = FXCollections.observableArrayList();
+		FilteredList<String> filteredData = new FilteredList<>(data, s -> true);
+		ListView<String> list = new ListView<String>(filteredData);
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		Dictionary.addAllWords();
 		
@@ -83,10 +86,10 @@ import javafx.util.Callback;
 	public void start(Stage primaryStage) {
 		
 		VBox right = new VBox();
-	    ObservableList<String> data = FXCollections.observableArrayList();
+	    
 	    Dictionary.listWords().forEach(data::add);
 
-	    FilteredList<String> filteredData = new FilteredList<>(data, s -> true);
+	   // FilteredList<String> filteredData = new FilteredList<>(data, s -> true);
 	    Text spelling = new Text();
 	    Text defHeader = new Text("Definitions");
 	    Text synHeader = new Text("Synonyms");
@@ -96,6 +99,7 @@ import javafx.util.Callback;
 	    antHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
 	    TextField filterInput = new TextField();
 	    filterInput.textProperty().addListener(obs->{
+	    	
 	        String filter = filterInput.getText(); 
 	        if (filter == null || filter.length() == 0) {
 	            filteredData.setPredicate(s -> true);
@@ -104,28 +108,26 @@ import javafx.util.Callback;
 	            filteredData.setPredicate(s -> s.contains(filter));
 	        }
 	    });
-	    List<String> wordsDisplayed = data;
+	    List<String> currentWordList = data;
 	    
 	    int maxHeight = 600;
-	    ListView<String> list = new ListView<String>(filteredData);
+	    //ListView<String> list = new ListView<String>(filteredData);
+	    index = -1;
 	    GridPane content = new GridPane();
 	    
 	    content.setPadding(new Insets(5, 10, 5, 5));
 	    
 	    list.getSelectionModel().selectedItemProperty()
         .addListener(new ChangeListener<String>() {
-          public void changed(ObservableValue<? extends String> observable,
+          
+		public void changed(ObservableValue<? extends String> observable,
               String oldValue, String newValue) {
-        	if (lastIndex != -1) {
-        		
-        		lastWord = Dictionary.listWords().get(lastIndex);
-        		if (true) {
-        			right.getChildren().clear();
-        		}
-        	}
-            int index = wordsDisplayed.indexOf(list.getSelectionModel().getSelectedItem());
-            lastIndex= index;
+			
+        	
+            
+            
             Words[] wordList = null;
+            ArrayList<Words> wordsShown = new ArrayList<Words>();
             try {
 				wordList = Dictionary.addAllWords();
 			} catch (JsonSyntaxException e) {
@@ -135,9 +137,19 @@ import javafx.util.Callback;
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
+            for (Words word : wordList) {
+            	for (String shown : currentWordList) {
+            		if (word.getSpelling().equals(shown)) {
+            			wordsShown.add(word);
+            		}
+            	}
+            	
+            }
             
-           //Word currentWord = list.(list.getSelectionModel().getSelectedItem())].indexOf();
-             
+            index = currentWordList.indexOf(list.getSelectionModel().getSelectedItem());
+            
+            lastIndex = index;
+           
             ArrayList<Definitions> definitions = new ArrayList<Definitions>();
 
             ArrayList<String> synonyms = new ArrayList<String>();
@@ -221,6 +233,7 @@ import javafx.util.Callback;
 	                    right.setLayoutY(-new_val.doubleValue());
 	            }
 	        });
+	        list.getSelectionModel().clearSelection();
 	      primaryStage.setScene(scene);
 	      primaryStage.show();
 	}
