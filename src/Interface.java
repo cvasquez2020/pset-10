@@ -41,24 +41,28 @@ import javafx.scene.paint.Color;
 		static final Text defHeader = new Text("Definitions");
 		static final Text synHeader = new Text("Synonyms");
 		static final Text antHeader = new Text("Antonyms");
+		
 		static public Boolean ascending = true;
 		static Words lastWord = null;
+		
 		static private List<String> currentWordList;
+		
 		static private CheckBox asc = new CheckBox("asc");
 	    static private CheckBox desc = new CheckBox("desc");
+	    
 	    static private ArrayList<Definitions> definitions = new ArrayList<Definitions>();
-	    static VBox right = new VBox();
+	    private static VBox right = new VBox();
         static private ArrayList<String> synonyms = new ArrayList<String>();
-
         static private ArrayList<String> antonyms = new ArrayList<String>();
 		static int index;
-		Button button;
+		
 		ObservableList<String> data = FXCollections.observableArrayList();
 		FilteredList<String> filteredData = new FilteredList<>(data, s -> true);
 		ListView<String> list = new ListView<String>(filteredData);
+		
 		private GridPane content;
-		//private Text spelling;
 		private TextField filterInput;
+		private static VBox left = new VBox();
 		private static Button addButton = new Button("Add");
 		
 		private static Button rmButton = new Button("Remove");
@@ -67,18 +71,13 @@ import javafx.scene.paint.Color;
 		Dictionary.addAllWords();
 		asc.setSelected(true);
 	    launch(args);
+	    
 	}
 	
 	
 	@Override
 	public void start(Stage primaryStage) {
-		EventHandler<ActionEvent> addWord = new EventHandler<ActionEvent>() {
-		    @Override
-		    public void handle(ActionEvent event) {
-		       addButton.setText("addWorks");
-		        event.consume();
-		    }
-		};
+		
 		EventHandler<ActionEvent> removeWord = new EventHandler<ActionEvent>() {
 		    @Override
 		    public void handle(ActionEvent event) {
@@ -86,8 +85,7 @@ import javafx.scene.paint.Color;
 		        event.consume();
 		    }
 		};
-		addButton.setOnAction(addWord);
-	    rmButton.setOnAction(removeWord);
+		
 		right = new VBox();
 	    Dictionary.listSpellings(ascending).forEach(data::add);
 	  
@@ -205,7 +203,7 @@ import javafx.scene.paint.Color;
 	      list.setPrefWidth(150);
 	      list.setPrefHeight(maxHeight);
 	      
-	      VBox left = new VBox(buttons, filterInput, check, separator1, list);
+	      left  = new VBox(buttons, filterInput, check, separator1, list);
 	      left.setSpacing(5);
 	      right.setSpacing(10);
 	      left.setPadding(new Insets(2, 2, 2, 2));
@@ -249,12 +247,21 @@ import javafx.scene.paint.Color;
 		              
 		          }
 		      });  
-		      
+		      EventHandler<ActionEvent> addWord = new EventHandler<ActionEvent>() {
+				    @Override
+				    public void handle(ActionEvent event) {
+				    	addWordScreen(primaryStage, scene, left);
+				        event.consume();
+				    }
+				};
+				addButton.setOnAction(addWord);
+			    rmButton.setOnAction(removeWord);
 	      list.getSelectionModel().clearSelection();
 	      primaryStage.setScene(scene);
 	      primaryStage.show();
 	      
 	}
+	
 	public void display(boolean ascending, Stage ps, Scene scene, Words word) {
 	
 		right.getChildren().clear();
@@ -320,7 +327,7 @@ import javafx.scene.paint.Color;
 	      list.setPrefWidth(150);
 	      int maxHeight = 600;
 		list.setPrefHeight(maxHeight );
-		VBox left = new VBox(buttons, filterInput, check, separator1, list);
+		left = new VBox(buttons, filterInput, check, separator1, list);
 	      left.setSpacing(5);
 	      right.setSpacing(10);
 	      left.setPadding(new Insets(2, 2, 2, 2));
@@ -333,9 +340,52 @@ import javafx.scene.paint.Color;
           	
           	right.getChildren().clear();
           }
+	      EventHandler<ActionEvent> addWord = new EventHandler<ActionEvent>() {
+			    @Override
+			    public void handle(ActionEvent event) {
+			    	addWordScreen(ps, scene, left);
+			        event.consume();
+			    }
+			};
+			addButton.setOnAction(addWord);
+		    //rmButton.setOnAction(removeWord);
 		list.getSelectionModel().clearSelection();
 	      ps.setScene(scene);
 	      ps.show();
+    }
+	public void addWordScreen(Stage ps, Scene scene, VBox left) {
+		
+		right.getChildren().clear();
+	    defHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21)); 
+	    synHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
+	    antHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
+		content.setPadding(new Insets(5, 10, 5, 5));
+		spelling.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 36)); 
+        right.getChildren().clear();
+        spelling.setText("Word");
+         	
+        right.getChildren().addAll(spelling);
+        right.getChildren().addAll(defHeader);
+        right.getChildren().add(synHeader);
+        right.getChildren().add(antHeader);
+	    spelling.setFill(Color.BLACK); 
+	    Separator separator2 = new Separator();
+	    separator2.setOrientation(Orientation.VERTICAL);
+	    spelling.setStrokeWidth(2); 
+	    list.setPrefWidth(150);
+	    int maxHeight = 600;
+	    list.setPrefHeight(maxHeight );
+	    left.setSpacing(5);
+	    right.setSpacing(10);
+	    left.setPadding(new Insets(2, 2, 2, 2));
+	    GridPane.setMargin(right, new Insets(2,10,2,2));
+	    HBox both = new HBox(left, right);
+	    both.setSpacing(20);
+	    content.add(both, 0, 0);
+	      
+	    list.getSelectionModel().clearSelection();
+	    ps.setScene(scene);
+	    ps.show();
     }
 	
 }
