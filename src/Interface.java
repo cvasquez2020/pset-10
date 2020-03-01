@@ -36,11 +36,20 @@ import javafx.scene.paint.Color;
 
 
 	public class Interface extends Application {
-		static public Boolean ascending = false;
-		static String lastWord = "";
+		static private Text spelling = new Text();
+		static final Text defHeader = new Text("Definitions");
+		static final Text synHeader = new Text("Synonyms");
+		static final Text antHeader = new Text("Antonyms");
+		static public Boolean ascending = true;
+		static Words lastWord = null;
+		static private List<String> currentWordList;
 		static private CheckBox asc = new CheckBox("asc");
 	    static private CheckBox desc = new CheckBox("desc");
-	    
+	    static private ArrayList<Definitions> definitions = new ArrayList<Definitions>();
+	    static VBox right = new VBox();
+        static private ArrayList<String> synonyms = new ArrayList<String>();
+
+        static private ArrayList<String> antonyms = new ArrayList<String>();
 		static int index;
 		Button button;
 		ObservableList<String> data = FXCollections.observableArrayList();
@@ -51,19 +60,16 @@ import javafx.scene.paint.Color;
 		private TextField filterInput;
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		Dictionary.addAllWords();
-		desc.setSelected(true);
+		asc.setSelected(true);
 	    launch(args);
 	}
 	
 	@Override
 	public void start(Stage primaryStage) {
 		
-		VBox right = new VBox();
+		right = new VBox();
 	    Dictionary.listSpellings(ascending).forEach(data::add);
-	    Text spelling = new Text();
-	    Text defHeader = new Text("Definitions");
-	    Text synHeader = new Text("Synonyms");
-	    Text antHeader = new Text("Antonyms");
+	  
 	    defHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21)); 
 	    synHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
 	    antHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
@@ -80,7 +86,7 @@ import javafx.scene.paint.Color;
 	        
 	    });
 	    
-	    List<String> currentWordList = filteredData;
+	    currentWordList = filteredData;
 	    
 	    int maxHeight = 600;
 	   
@@ -106,20 +112,22 @@ import javafx.scene.paint.Color;
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-            if (!currentWordList.contains(lastWord)) {
+            if (lastWord != null) {
+            if (!currentWordList.contains(lastWord.getSpelling())) {
 		    	right.getChildren().clear();
 		    }
+            }
             index = currentWordList.indexOf(list.getSelectionModel().getSelectedItem());
 
-            ArrayList<Definitions> definitions = new ArrayList<Definitions>();
+            definitions = new ArrayList<Definitions>();
 
-            ArrayList<String> synonyms = new ArrayList<String>();
+            synonyms = new ArrayList<String>();
 
-            ArrayList<String> antonyms = new ArrayList<String>();
+            antonyms = new ArrayList<String>();
             if (index >= 0) {
             	right.getChildren().clear();
             	spelling.setText(wordList.get(index).getSpelling());
-            	lastWord = wordList.get(index).getSpelling();
+            	lastWord = wordList.get(index);
             	right.getChildren().addAll(spelling);
             	right.getChildren().addAll(defHeader);
             	definitions = wordList.get(index).getDefintion();
@@ -147,8 +155,8 @@ import javafx.scene.paint.Color;
             	  right.getChildren().addAll(new Text("\t" +  ((int) antonyms.indexOf(ant) + 1) + ". " + ant));
               }
            }
-           
-            if (!currentWordList.contains(lastWord)) {
+            if (!currentWordList.contains(lastWord.getSpelling())) {
+            	
             	right.getChildren().clear();
             }
           }
@@ -194,7 +202,7 @@ import javafx.scene.paint.Color;
 		            	  data.clear();
 		            	  ascending = false;
 		            	  asc.setSelected(false);
-		            	  display(ascending, primaryStage, scene);
+		            	  display(ascending, primaryStage, scene, lastWord);
 		              } else {
 		                 asc.setSelected(true);
 		              }
@@ -210,33 +218,69 @@ import javafx.scene.paint.Color;
 		            	  data.clear();
 		            	  ascending = true;
 		            	  desc.setSelected(false);
-		            	  display(ascending, primaryStage, scene);
+		            	  display(ascending, primaryStage, scene, lastWord);
 		              } else {
 		                 desc.setSelected(true);
 		              }
 		              
 		          }
 		      });  
+		      
 	      list.getSelectionModel().clearSelection();
 	      primaryStage.setScene(scene);
 	      primaryStage.show();
 	      
 	}
-	public void display(boolean ascending, Stage ps, Scene scene) {
-		VBox right = new VBox();
+	public void display(boolean ascending, Stage ps, Scene scene, Words word) {
+	
+		right.getChildren().clear();
 	    Dictionary.listSpellings(ascending).forEach(data::add);
-	    Text spelling = new Text();
-	    Text defHeader = new Text("Definitions");
-	    Text synHeader = new Text("Synonyms");
-	    Text antHeader = new Text("Antonyms");
 	    defHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21)); 
 	    synHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
 	    antHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
 
 		  content.setPadding(new Insets(5, 10, 5, 5));
 		 spelling.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 36)); 
-	     
-	      
+		 ArrayList<String> synonyms = new ArrayList<String>();
+
+         ArrayList<String> antonyms = new ArrayList<String>();
+         if (lastWord != null ) {
+         	right.getChildren().clear();
+         	spelling.setText(lastWord.getSpelling());
+         	
+         	right.getChildren().addAll(spelling);
+         	right.getChildren().addAll(defHeader);
+         	definitions = lastWord.getDefintion();
+         }
+         
+        for (Definitions def : definitions) {
+     	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " + lastWord.getSpelling() + " (" + def.getPartOfSpeech() + ")"));
+     	   right.getChildren().addAll(new Text("\t" + def.getDefinition()));
+        }
+       
+        if (lastWord != null) {
+        synonyms = lastWord.getSynonyms();
+        for (String syn : synonyms) {
+     	   right.getChildren().addAll(new Text("\t" + ((int) synonyms.indexOf(syn) + 1) + ". " +  syn));
+        }
+        right.getChildren().add(synHeader);
+        }
+       
+        
+        if (lastWord != null) {
+     	   antonyms = lastWord.getAntonyms();
+            
+            right.getChildren().add(antHeader);
+           for (String ant : antonyms) {
+         	  right.getChildren().addAll(new Text("\t" +  ((int) antonyms.indexOf(ant) + 1) + ". " + ant));
+           }
+           if (!currentWordList.contains(lastWord.getSpelling())) {
+            	right.getChildren().clear();
+            }
+   	      
+        }
+        
+         
 	     
 	      HBox check = new HBox(asc, desc);
 	      
@@ -261,7 +305,10 @@ import javafx.scene.paint.Color;
 	      HBox both = new HBox(left, right);
 	      both.setSpacing(20);
 	      content.add(both, 0, 0);
-	       
+	      if (!currentWordList.contains(lastWord.getSpelling())) {
+          	
+          	right.getChildren().clear();
+          }
 		list.getSelectionModel().clearSelection();
 	      ps.setScene(scene);
 	      ps.show();
