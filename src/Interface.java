@@ -4,6 +4,7 @@ import java.util.List;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Labeled;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -39,19 +40,24 @@ import javafx.scene.paint.Color;
 		static String lastWord = "";
 		static private CheckBox asc = new CheckBox("asc");
 	    static private CheckBox desc = new CheckBox("desc");
+	    
 		static int index;
 		Button button;
 		ObservableList<String> data = FXCollections.observableArrayList();
 		FilteredList<String> filteredData = new FilteredList<>(data, s -> true);
 		ListView<String> list = new ListView<String>(filteredData);
+		private GridPane content;
+		//private Text spelling;
+		private TextField filterInput;
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		Dictionary.addAllWords();
-		
-	      launch(args);
+		desc.setSelected(true);
+	    launch(args);
 	}
 	
 	@Override
 	public void start(Stage primaryStage) {
+		
 		VBox right = new VBox();
 	    Dictionary.listSpellings(ascending).forEach(data::add);
 	    Text spelling = new Text();
@@ -61,7 +67,7 @@ import javafx.scene.paint.Color;
 	    defHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21)); 
 	    synHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
 	    antHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
-	    TextField filterInput = new TextField();
+	    filterInput = new TextField();
 	    filterInput.textProperty().addListener(obs->{
 	    	
 	        String filter = filterInput.getText(); 
@@ -79,7 +85,7 @@ import javafx.scene.paint.Color;
 	    int maxHeight = 600;
 	   
 	    index = -1;
-	    GridPane content = new GridPane();
+	    content = new GridPane();
 	    
 	    content.setPadding(new Insets(5, 10, 5, 5));
 	    
@@ -151,8 +157,7 @@ import javafx.scene.paint.Color;
 	    
 	      spelling.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 36)); 
 	     
-	      desc.setSelected(true);
-	     
+	      
 	      HBox check = new HBox(asc, desc);
 	      
 	      spelling.setFill(Color.BLACK); 
@@ -167,45 +172,7 @@ import javafx.scene.paint.Color;
 	      
 	      list.setPrefWidth(150);
 	      list.setPrefHeight(maxHeight);
-	      desc.selectedProperty().addListener(new ChangeListener<Boolean>() {
-	    	  
-	          @Override
-	          public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-
-	              if(newValue){
-	            	  ascending = false;
-	            	  asc.setSelected(false);
-	              } else {
-	                 asc.setSelected(true);
-	              }
-	              
-	          }
-	      });
-	      asc.selectedProperty().addListener(new ChangeListener<Boolean>() {
-	    	  
-	          @Override
-	          public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-
-	              if(newValue){
-	            	  ascending = true;
-	            	  desc.setSelected(false);
-	              } else {
-	                 desc.setSelected(true);
-	              }
-	              TextField filterInput = new TextField();
-	      	    filterInput.textProperty().addListener(obs->{
-	      	    	
-	      	        String filter = filterInput.getText(); 
-	      	        if (filter == null || filter.length() == 0) {
-	      	            filteredData.setPredicate(s -> true);
-	      	        }
-	      	        else {
-	      	            filteredData.setPredicate(s -> s.contains(filter));
-	      	        }
-	      	        
-	      	    });
-	          }
-	      });
+	      
 	      VBox left = new VBox(buttons, filterInput, check, separator1, list);
 	      left.setSpacing(5);
 	      right.setSpacing(10);
@@ -214,26 +181,89 @@ import javafx.scene.paint.Color;
 	      HBox both = new HBox(left, right);
 	      both.setSpacing(20);
 	      content.add(both, 0, 0);
-	      ScrollBar sc = new ScrollBar();
-	      Scene scene = new Scene(content, 1100, maxHeight);
-	        sc.setLayoutX(1100-sc.getWidth());
-	        sc.setMin(0);
-	        sc.setOrientation(Orientation.VERTICAL);
-	        sc.setPrefHeight(180);
-	        sc.setMax(1100);
-	        right.getChildren().addAll(sc);
-
-	        sc.valueProperty().addListener(new ChangeListener<Number>() {
-	            public void changed(ObservableValue<? extends Number> ov,
-	                Number old_val, Number new_val) {
-	                    right.setLayoutY(-new_val.doubleValue());
-	            }
-	        });
+	      
+	     Scene scene = new Scene(content, 1100, maxHeight);
+	     
 		      
-	       
+	        desc.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		    	  
+		          @Override
+		          public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
+		              if(newValue){
+		            	  data.clear();
+		            	  ascending = false;
+		            	  asc.setSelected(false);
+		            	  display(ascending, primaryStage, scene);
+		              } else {
+		                 asc.setSelected(true);
+		              }
+		              
+		          }
+		      });
+		      asc.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		    	  
+		          @Override
+		          public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
+		              if (newValue){
+		            	  data.clear();
+		            	  ascending = true;
+		            	  desc.setSelected(false);
+		            	  display(ascending, primaryStage, scene);
+		              } else {
+		                 desc.setSelected(true);
+		              }
+		              
+		          }
+		      });  
 	      list.getSelectionModel().clearSelection();
 	      primaryStage.setScene(scene);
 	      primaryStage.show();
+	      
 	}
-	
+	public void display(boolean ascending, Stage ps, Scene scene) {
+		VBox right = new VBox();
+	    Dictionary.listSpellings(ascending).forEach(data::add);
+	    Text spelling = new Text();
+	    Text defHeader = new Text("Definitions");
+	    Text synHeader = new Text("Synonyms");
+	    Text antHeader = new Text("Antonyms");
+	    defHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21)); 
+	    synHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
+	    antHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
+
+		  content.setPadding(new Insets(5, 10, 5, 5));
+		 spelling.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 36)); 
+	     
+	      
+	     
+	      HBox check = new HBox(asc, desc);
+	      
+	      spelling.setFill(Color.BLACK); 
+	      Separator separator1 = new Separator();
+	    
+	      Separator separator2 = new Separator();
+	      separator2.setOrientation(Orientation.VERTICAL);
+	      spelling.setStrokeWidth(2); 
+	      Button addWord = new Button("Add");
+	      Button rmWord = new Button("Remove");
+	      HBox buttons = new HBox(addWord, rmWord);
+	      
+	      list.setPrefWidth(150);
+	      int maxHeight = 600;
+		list.setPrefHeight(maxHeight );
+		VBox left = new VBox(buttons, filterInput, check, separator1, list);
+	      left.setSpacing(5);
+	      right.setSpacing(10);
+	      left.setPadding(new Insets(2, 2, 2, 2));
+	      GridPane.setMargin(right, new Insets(2,10,2,2));
+	      HBox both = new HBox(left, right);
+	      both.setSpacing(20);
+	      content.add(both, 0, 0);
+	       
+		list.getSelectionModel().clearSelection();
+	      ps.setScene(scene);
+	      ps.show();
+    }
 }
