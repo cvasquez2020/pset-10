@@ -35,7 +35,10 @@ import javafx.scene.paint.Color;
 
 
 	public class Interface extends Application {
+		static public Boolean ascending = false;
 		static String lastWord = "";
+		static private CheckBox asc = new CheckBox("asc");
+	    static private CheckBox desc = new CheckBox("desc");
 		static int index;
 		Button button;
 		ObservableList<String> data = FXCollections.observableArrayList();
@@ -43,14 +46,40 @@ import javafx.scene.paint.Color;
 		ListView<String> list = new ListView<String>(filteredData);
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		Dictionary.addAllWords();
-		
+		desc.selectedProperty().addListener(new ChangeListener<Boolean>() {
+	    	  
+	          @Override
+	          public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
+	              if(newValue){
+	            	  ascending = false;
+	            	  asc.setSelected(false);
+	              } else {
+	                 asc.setSelected(true);
+	              }
+	            
+	          }
+	      });
+	      asc.selectedProperty().addListener(new ChangeListener<Boolean>() {
+	    	  
+	          @Override
+	          public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
+	              if(newValue){
+	            	  ascending = true;
+	            	  desc.setSelected(false);
+	              } else {
+	                 desc.setSelected(true);
+	              }
+	          }
+	      });
 		launch(args);
 	}
 	
 	@Override
 	public void start(Stage primaryStage) {
 		VBox right = new VBox();
-	    Dictionary.listWords().forEach(data::add);
+	    Dictionary.listSpellings(ascending).forEach(data::add);
 	    Text spelling = new Text();
 	    Text defHeader = new Text("Definitions");
 	    Text synHeader = new Text("Synonyms");
@@ -138,18 +167,20 @@ import javafx.scene.paint.Color;
             	  right.getChildren().addAll(new Text("\t" +  ((int) antonyms.indexOf(ant) + 1) + ". " + ant));
               }
            }
-           System.out.println(currentWordList);
+           
             if (!currentWordList.contains(lastWord)) {
             	right.getChildren().clear();
             }
           }
         });
 	    
-	      spelling.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 36)); 
-	      CheckBox asc = new CheckBox("asc");
-	      CheckBox desc = new CheckBox("desc");
-	      HBox check = new HBox(asc, desc);
 	    
+	      spelling.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 36)); 
+	     
+	      desc.setSelected(true);
+	     
+	      HBox check = new HBox(asc, desc);
+	      
 	      spelling.setFill(Color.BLACK); 
 	      Separator separator1 = new Separator();
 	    
