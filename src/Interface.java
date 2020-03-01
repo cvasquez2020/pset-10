@@ -369,7 +369,8 @@ import javafx.scene.paint.Color;
         spelling.setText("Word");
         right.getChildren().addAll(spelling);
         
-        TextField addSpelling = new TextField("New word...");
+        TextField addSpelling = new TextField();
+        addSpelling.setPromptText("New word...");
         right.getChildren().add(addSpelling);
         
         Button extraDef = new Button("+");
@@ -392,20 +393,24 @@ import javafx.scene.paint.Color;
         	    );
         
         for (int i = 0; i < (3 + extraDefs); i++) {
-        	right.getChildren().add(new TextField("New word.."));
+        	TextField newDefinition = new TextField();
+        	newDefinition.setPromptText("New word...");
+        	right.getChildren().add(newDefinition);
         	final ComboBox<String> addPOS = new ComboBox<String>(partsOfSpeech);
-        	addPOS.setValue("Part of speech...");
+        	addPOS.setPromptText("Part of speech...");
         	right.getChildren().add(addPOS);        	
         }
-        
-        
-        
-        
+       
         right.getChildren().add(synHeader);
-        TextField synField = new TextField("Synonyms");
-        right.getChildren().add(antHeader);
+        TextField synField = new TextField();
+        synField.setPromptText("Synonyms...");
+        right.getChildren().add(synField);
         
-	    spelling.setFill(Color.BLACK); 
+        right.getChildren().add(antHeader);
+        TextField antField = new TextField();
+        antField.setPromptText("Antonyms...");
+        right.getChildren().add(antField);
+        
 	    Separator separator2 = new Separator();
 	    separator2.setOrientation(Orientation.VERTICAL);
 	    spelling.setStrokeWidth(2); 
