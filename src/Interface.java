@@ -46,34 +46,8 @@ import javafx.scene.paint.Color;
 		ListView<String> list = new ListView<String>(filteredData);
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		Dictionary.addAllWords();
-		desc.selectedProperty().addListener(new ChangeListener<Boolean>() {
-	    	  
-	          @Override
-	          public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-
-	              if(newValue){
-	            	  ascending = false;
-	            	  asc.setSelected(false);
-	              } else {
-	                 asc.setSelected(true);
-	              }
-	            
-	          }
-	      });
-	      asc.selectedProperty().addListener(new ChangeListener<Boolean>() {
-	    	  
-	          @Override
-	          public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-
-	              if(newValue){
-	            	  ascending = true;
-	            	  desc.setSelected(false);
-	              } else {
-	                 desc.setSelected(true);
-	              }
-	          }
-	      });
-		launch(args);
+		
+	      launch(args);
 	}
 	
 	@Override
@@ -193,8 +167,45 @@ import javafx.scene.paint.Color;
 	      
 	      list.setPrefWidth(150);
 	      list.setPrefHeight(maxHeight);
-	      
-	      
+	      desc.selectedProperty().addListener(new ChangeListener<Boolean>() {
+	    	  
+	          @Override
+	          public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
+	              if(newValue){
+	            	  ascending = false;
+	            	  asc.setSelected(false);
+	              } else {
+	                 asc.setSelected(true);
+	              }
+	              
+	          }
+	      });
+	      asc.selectedProperty().addListener(new ChangeListener<Boolean>() {
+	    	  
+	          @Override
+	          public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
+	              if(newValue){
+	            	  ascending = true;
+	            	  desc.setSelected(false);
+	              } else {
+	                 desc.setSelected(true);
+	              }
+	              TextField filterInput = new TextField();
+	      	    filterInput.textProperty().addListener(obs->{
+	      	    	
+	      	        String filter = filterInput.getText(); 
+	      	        if (filter == null || filter.length() == 0) {
+	      	            filteredData.setPredicate(s -> true);
+	      	        }
+	      	        else {
+	      	            filteredData.setPredicate(s -> s.contains(filter));
+	      	        }
+	      	        
+	      	    });
+	          }
+	      });
 	      VBox left = new VBox(buttons, filterInput, check, separator1, list);
 	      left.setSpacing(5);
 	      right.setSpacing(10);
@@ -218,6 +229,7 @@ import javafx.scene.paint.Color;
 	                    right.setLayoutY(-new_val.doubleValue());
 	            }
 	        });
+		      
 	       
 	      list.getSelectionModel().clearSelection();
 	      primaryStage.setScene(scene);
