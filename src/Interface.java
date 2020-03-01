@@ -10,7 +10,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
@@ -58,15 +59,35 @@ import javafx.scene.paint.Color;
 		private GridPane content;
 		//private Text spelling;
 		private TextField filterInput;
+		private static Button addButton = new Button("Add");
+		
+		private static Button rmButton = new Button("Remove");
+		
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		Dictionary.addAllWords();
 		asc.setSelected(true);
 	    launch(args);
 	}
 	
+	
 	@Override
 	public void start(Stage primaryStage) {
-		
+		EventHandler<ActionEvent> addWord = new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent event) {
+		       addButton.setText("addWorks");
+		        event.consume();
+		    }
+		};
+		EventHandler<ActionEvent> removeWord = new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent event) {
+		       rmButton.setText("rmWorks");
+		        event.consume();
+		    }
+		};
+		addButton.setOnAction(addWord);
+	    rmButton.setOnAction(removeWord);
 		right = new VBox();
 	    Dictionary.listSpellings(ascending).forEach(data::add);
 	  
@@ -74,6 +95,8 @@ import javafx.scene.paint.Color;
 	    synHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
 	    antHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
 	    filterInput = new TextField();
+	    
+	    
 	    filterInput.textProperty().addListener(obs->{
 	    	
 	        String filter = filterInput.getText(); 
@@ -174,9 +197,10 @@ import javafx.scene.paint.Color;
 	      Separator separator2 = new Separator();
 	      separator2.setOrientation(Orientation.VERTICAL);
 	      spelling.setStrokeWidth(2); 
-	      Button addWord = new Button("Add");
-	      Button rmWord = new Button("Remove");
-	      HBox buttons = new HBox(addWord, rmWord);
+	      
+	      
+		    
+	      HBox buttons = new HBox(addButton, rmButton);
 	      
 	      list.setPrefWidth(150);
 	      list.setPrefHeight(maxHeight);
@@ -290,9 +314,8 @@ import javafx.scene.paint.Color;
 	      Separator separator2 = new Separator();
 	      separator2.setOrientation(Orientation.VERTICAL);
 	      spelling.setStrokeWidth(2); 
-	      Button addWord = new Button("Add");
-	      Button rmWord = new Button("Remove");
-	      HBox buttons = new HBox(addWord, rmWord);
+	      
+	      HBox buttons = new HBox(addButton, rmButton);
 	      
 	      list.setPrefWidth(150);
 	      int maxHeight = 600;
@@ -314,4 +337,5 @@ import javafx.scene.paint.Color;
 	      ps.setScene(scene);
 	      ps.show();
     }
+	
 }
