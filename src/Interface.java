@@ -155,7 +155,7 @@ import javafx.scene.paint.Color;
             	  right.getChildren().addAll(new Text("\t" +  ((int) antonyms.indexOf(ant) + 1) + ". " + ant));
               }
            }
-            if (!currentWordList.contains(lastWord.getSpelling())) {
+            if (lastWord != null && !currentWordList.contains(lastWord.getSpelling())) {
             	
             	right.getChildren().clear();
             }
@@ -274,7 +274,7 @@ import javafx.scene.paint.Color;
            for (String ant : antonyms) {
          	  right.getChildren().addAll(new Text("\t" +  ((int) antonyms.indexOf(ant) + 1) + ". " + ant));
            }
-           if (!currentWordList.contains(lastWord.getSpelling())) {
+           if ( lastWord != null && !currentWordList.contains(lastWord.getSpelling())) {
             	right.getChildren().clear();
             }
    	      
@@ -305,7 +305,8 @@ import javafx.scene.paint.Color;
 	      HBox both = new HBox(left, right);
 	      both.setSpacing(20);
 	      content.add(both, 0, 0);
-	      if (!currentWordList.contains(lastWord.getSpelling())) {
+	      
+	      if (lastWord != null && !currentWordList.contains(lastWord.getSpelling())) {
           	
           	right.getChildren().clear();
           }
