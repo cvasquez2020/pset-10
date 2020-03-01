@@ -4,6 +4,7 @@ import java.util.List;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Labeled;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
@@ -62,6 +63,7 @@ import javafx.scene.paint.Color;
 		
 		private GridPane content;
 		private TextField filterInput;
+		private static int extraDefs = 0;
 		private static VBox left = new VBox();
 		private static Button addButton = new Button("Add");
 		
@@ -353,7 +355,8 @@ import javafx.scene.paint.Color;
 	      ps.setScene(scene);
 	      ps.show();
     }
-	public void addWordScreen(Stage ps, Scene scene, VBox left) {
+	
+	public void addWordScreen(Stage ps, Scene scene, VBox left) {		
 		
 		right.getChildren().clear();
 	    defHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21)); 
@@ -362,19 +365,53 @@ import javafx.scene.paint.Color;
 		content.setPadding(new Insets(5, 10, 5, 5));
 		spelling.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 36)); 
         right.getChildren().clear();
+        
         spelling.setText("Word");
-         	
         right.getChildren().addAll(spelling);
-        right.getChildren().addAll(defHeader);
+        
+        TextField addSpelling = new TextField("New word...");
+        right.getChildren().add(addSpelling);
+        
+        Button extraDef = new Button("+");
+        EventHandler<ActionEvent> addDefField = new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent event) {
+		    	extraDefs++;
+		        event.consume();
+		    }
+		};
+        extraDef.setOnAction(addDefField);
+        HBox DefField = new HBox(defHeader, extraDef);
+        right.getChildren().add(DefField);
+              
+        ObservableList<String> partsOfSpeech = 
+        	    FXCollections.observableArrayList(
+        	        "Adjective",
+        	        "Noun",
+        	        "Verb"
+        	    );
+        
+        for (int i = 0; i < (3 + extraDefs); i++) {
+        	right.getChildren().add(new TextField("New word.."));
+        	final ComboBox<String> addPOS = new ComboBox<String>(partsOfSpeech);
+        	addPOS.setValue("Part of speech...");
+        	right.getChildren().add(addPOS);        	
+        }
+        
+        
+        
+        
         right.getChildren().add(synHeader);
+        TextField synField = new TextField("Synonyms");
         right.getChildren().add(antHeader);
+        
 	    spelling.setFill(Color.BLACK); 
 	    Separator separator2 = new Separator();
 	    separator2.setOrientation(Orientation.VERTICAL);
 	    spelling.setStrokeWidth(2); 
 	    list.setPrefWidth(150);
 	    int maxHeight = 600;
-	    list.setPrefHeight(maxHeight );
+	    list.setPrefHeight(maxHeight);
 	    left.setSpacing(5);
 	    right.setSpacing(10);
 	    left.setPadding(new Insets(2, 2, 2, 2));
@@ -382,7 +419,7 @@ import javafx.scene.paint.Color;
 	    HBox both = new HBox(left, right);
 	    both.setSpacing(20);
 	    content.add(both, 0, 0);
-	      
+	    
 	    list.getSelectionModel().clearSelection();
 	    ps.setScene(scene);
 	    ps.show();
