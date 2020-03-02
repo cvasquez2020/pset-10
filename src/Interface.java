@@ -104,7 +104,7 @@ import javafx.scene.paint.Color;
 	            filteredData.setPredicate(s -> true);
 	        }
 	        else {
-	            filteredData.setPredicate(s -> s.contains(filter));
+	            filteredData.setPredicate(s -> s.matches(filter + ".*"));
 	        }
 	        
 	    });
@@ -144,8 +144,6 @@ import javafx.scene.paint.Color;
            
          
             if (currentWord != null && !currentWordList.contains(currentWord.getSpelling())) {
-
-            	System.out.print(currentWord.getSpelling());
             	currentWord = null;
 		    	right.getChildren().clear();
 		    
