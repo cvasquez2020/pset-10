@@ -3,6 +3,7 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -37,12 +38,11 @@ public class Dictionary {
 	}
 	
 	//@SuppressWarnings("null")
-	public static ArrayList<Words> sortObj(Boolean ascending) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+	public static ArrayList<Words> sortObj(Boolean ascending, List<String> sortedSpellings) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		
-		ArrayList<String> sortedSpellings = listSpellings(ascending);
 		wordList = addAllWords();
 		ArrayList<Words> sortedObj = new ArrayList<Words>();
-		for (int i = 0; sortedObj.size() < wordList.length; i++) {
+		for (int i = 0; sortedObj.size() < sortedSpellings.size(); i++) {
 		
 			for (Words word : wordList) {
 				if (sortedSpellings.get(i).equals(word.getSpelling())) {

@@ -42,10 +42,10 @@ import javafx.scene.paint.Color;
 		static final Text defHeader = new Text("Definitions");
 		static final Text synHeader = new Text("Synonyms");
 		static final Text antHeader = new Text("Antonyms");
-		
+		static private Words currentWord = null;
 		static public Boolean ascending = true;
 		static Words lastWord = null;
-		
+		static private List<Words> objsDisplayed;
 		static private List<String> currentWordList;
 		
 		static private CheckBox asc = new CheckBox("asc");
@@ -108,7 +108,7 @@ import javafx.scene.paint.Color;
 	        }
 	        
 	    });
-	    
+	   
 	    currentWordList = filteredData;
 	    
 	    int maxHeight = 600;
@@ -121,48 +121,64 @@ import javafx.scene.paint.Color;
 	    list.getSelectionModel().selectedItemProperty()
         .addListener(new ChangeListener<String>() {
           
+		
+
 		public void changed(ObservableValue<? extends String> observable,
               String oldValue, String newValue) {
+			 index = currentWordList.indexOf(list.getSelectionModel().getSelectedItem());
+	            
+	     	   
+	            try {
+					objsDisplayed = Dictionary.sortObj(ascending, currentWordList);
+				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+					
+					e.printStackTrace();
+				}
+	            if (index != -1) {
+	            	
+	            	currentWord = objsDisplayed.get(index);
+	                	
+	            }
 			
-            ArrayList<Words> wordList = null;
             
-            try {
-				wordList = Dictionary.sortObj(ascending);
-			} catch (JsonSyntaxException e) {
-				e.printStackTrace();
-			} catch (JsonIOException e) {
-				e.printStackTrace();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-            if (lastWord != null) {
-            if (!currentWordList.contains(lastWord.getSpelling())) {
-		    	right.getChildren().clear();
-		    }
-            }
-            index = currentWordList.indexOf(list.getSelectionModel().getSelectedItem());
+           
+         
+            if (currentWord != null && !currentWordList.contains(currentWord.getSpelling())) {
 
+            	System.out.print(currentWord.getSpelling());
+            	currentWord = null;
+		    	right.getChildren().clear();
+		    
+            }
+            
+            //we need to get the word from current sorted list
+            
+            
+           
+            
             definitions = new ArrayList<Definitions>();
 
             synonyms = new ArrayList<String>();
 
             antonyms = new ArrayList<String>();
             if (index >= 0) {
+            	
+                
             	right.getChildren().clear();
-            	spelling.setText(wordList.get(index).getSpelling());
-            	lastWord = wordList.get(index);
+            	spelling.setText(currentWord.getSpelling());
+            	lastWord = currentWord;
             	right.getChildren().addAll(spelling);
             	right.getChildren().addAll(defHeader);
-            	definitions = wordList.get(index).getDefintion();
+            	definitions = currentWord.getDefintion();
             }
             
            for (Definitions def : definitions) {
-        	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " + wordList.get(index).getSpelling() + " (" + def.getPartOfSpeech() + ")"));
+        	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " + currentWord.getSpelling() + " (" + def.getPartOfSpeech() + ")"));
         	   right.getChildren().addAll(new Text("\t" + def.getDefinition()));
            }
           
            if (index >= 0) {
-           synonyms = wordList.get(index).getSynonyms();
+           synonyms = currentWord.getSynonyms();
            for (String syn : synonyms) {
         	   right.getChildren().addAll(new Text("\t" + ((int) synonyms.indexOf(syn) + 1) + ". " +  syn));
            }
@@ -171,15 +187,16 @@ import javafx.scene.paint.Color;
           
            
            if (index >= 0) {
-        	   antonyms = wordList.get(index).getAntonyms();
+        	   antonyms = currentWord.getAntonyms();
                
                right.getChildren().add(antHeader);
               for (String ant : antonyms) {
             	  right.getChildren().addAll(new Text("\t" +  ((int) antonyms.indexOf(ant) + 1) + ". " + ant));
               }
            }
-            if (lastWord != null && !currentWordList.contains(lastWord.getSpelling())) {
+            if (currentWord != null && !currentWordList.contains(currentWord.getSpelling())) {
             	
+                currentWord = null;
             	right.getChildren().clear();
             }
           }
@@ -226,7 +243,10 @@ import javafx.scene.paint.Color;
 		            	  data.clear();
 		            	  ascending = false;
 		            	  asc.setSelected(false);
-		            	  display(ascending, primaryStage, scene, lastWord);
+		            	 
+		            		  display(ascending, primaryStage, scene);  
+		            	  
+		            	  
 		              } else {
 		                 asc.setSelected(true);
 		              }
@@ -242,7 +262,8 @@ import javafx.scene.paint.Color;
 		            	  data.clear();
 		            	  ascending = true;
 		            	  desc.setSelected(false);
-		            	  display(ascending, primaryStage, scene, lastWord);
+		            	 
+		            	  display(ascending, primaryStage, scene);
 		              } else {
 		                 desc.setSelected(true);
 		              }
@@ -258,15 +279,14 @@ import javafx.scene.paint.Color;
 				};
 				addButton.setOnAction(addWord);
 			    rmButton.setOnAction(removeWord);
-	      list.getSelectionModel().clearSelection();
-	      primaryStage.setScene(scene);
-	      primaryStage.show();
+			    list.getSelectionModel().clearSelection();
+			    primaryStage.setScene(scene);
+			    primaryStage.show();
 	      
 	}
 	
-	public void display(boolean ascending, Stage ps, Scene scene, Words word) {
-	
-		right.getChildren().clear();
+	public void display(boolean ascending, Stage ps, Scene scene) {
+		
 	    Dictionary.listSpellings(ascending).forEach(data::add);
 	    defHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21)); 
 	    synHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
@@ -277,22 +297,24 @@ import javafx.scene.paint.Color;
 		 ArrayList<String> synonyms = new ArrayList<String>();
 
          ArrayList<String> antonyms = new ArrayList<String>();
-         if (lastWord != null ) {
+         if (currentWord != null ) {
+        	
+             
          	right.getChildren().clear();
-         	spelling.setText(lastWord.getSpelling());
+         	spelling.setText(currentWord.getSpelling());
          	
          	right.getChildren().addAll(spelling);
          	right.getChildren().addAll(defHeader);
-         	definitions = lastWord.getDefintion();
+         	definitions = currentWord.getDefintion();
          }
          
         for (Definitions def : definitions) {
-     	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " + lastWord.getSpelling() + " (" + def.getPartOfSpeech() + ")"));
+     	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " + currentWord.getSpelling() + " (" + def.getPartOfSpeech() + ")"));
      	   right.getChildren().addAll(new Text("\t" + def.getDefinition()));
         }
        
-        if (lastWord != null) {
-        synonyms = lastWord.getSynonyms();
+        if (currentWord != null) {
+        synonyms = currentWord.getSynonyms();
         for (String syn : synonyms) {
      	   right.getChildren().addAll(new Text("\t" + ((int) synonyms.indexOf(syn) + 1) + ". " +  syn));
         }
@@ -300,14 +322,15 @@ import javafx.scene.paint.Color;
         }
        
         
-        if (lastWord != null) {
-     	   antonyms = lastWord.getAntonyms();
+        if (currentWord != null) {
+     	   antonyms = currentWord.getAntonyms();
             
             right.getChildren().add(antHeader);
            for (String ant : antonyms) {
          	  right.getChildren().addAll(new Text("\t" +  ((int) antonyms.indexOf(ant) + 1) + ". " + ant));
            }
-           if ( lastWord != null && !currentWordList.contains(lastWord.getSpelling())) {
+           if ( currentWord != null && !currentWordList.contains(currentWord.getSpelling())) {
+        	   System.out.println("334");
             	right.getChildren().clear();
             }
    	      
@@ -328,7 +351,7 @@ import javafx.scene.paint.Color;
 	      
 	      list.setPrefWidth(150);
 	      int maxHeight = 600;
-		list.setPrefHeight(maxHeight );
+		list.setPrefHeight(maxHeight);
 		left = new VBox(buttons, filterInput, check, separator1, list);
 	      left.setSpacing(5);
 	      right.setSpacing(10);
@@ -338,8 +361,8 @@ import javafx.scene.paint.Color;
 	      both.setSpacing(20);
 	      content.add(both, 0, 0);
 	      
-	      if (lastWord != null && !currentWordList.contains(lastWord.getSpelling())) {
-          	
+	      if (currentWord != null && !currentWordList.contains(currentWord.getSpelling())) {
+          	System.out.println("366");
           	right.getChildren().clear();
           }
 	      EventHandler<ActionEvent> addWord = new EventHandler<ActionEvent>() {
@@ -358,13 +381,14 @@ import javafx.scene.paint.Color;
 	
 	public void addWordScreen(Stage ps, Scene scene, VBox left) {		
 		
+        
 		right.getChildren().clear();
 	    defHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21)); 
 	    synHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
 	    antHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
 		content.setPadding(new Insets(5, 10, 5, 5));
 		spelling.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 36)); 
-        right.getChildren().clear();
+        
         
         spelling.setText("Word");
         right.getChildren().addAll(spelling);
@@ -411,6 +435,13 @@ import javafx.scene.paint.Color;
         antField.setPromptText("Antonyms...");
         right.getChildren().add(antField);
         
+        Button confirmNewWord = new Button("Add");
+        confirmNewWord.setLayoutX(5);
+     
+        
+        
+        
+        right.getChildren().add(confirmNewWord);
 	    Separator separator2 = new Separator();
 	    separator2.setOrientation(Orientation.VERTICAL);
 	    spelling.setStrokeWidth(2); 
