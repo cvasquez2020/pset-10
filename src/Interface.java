@@ -19,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -68,9 +69,11 @@ import javafx.scene.paint.Color;
 		private static Button addButton = new Button("Add");
 		
 		private static Button rmButton = new Button("Remove");
+		static ScrollPane scroll = new ScrollPane();
 		
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		Dictionary.addAllWords();
+		
 		asc.setSelected(true);
 	    launch(args);
 	    
@@ -148,11 +151,6 @@ import javafx.scene.paint.Color;
 		    	right.getChildren().clear();
 		    
             }
-            
-            //we need to get the word from current sorted list
-            
-            
-           
             
             definitions = new ArrayList<Definitions>();
 
@@ -409,6 +407,7 @@ import javafx.scene.paint.Color;
         EventHandler<ActionEvent> addDefField = new EventHandler<ActionEvent>() {
 		    @Override
 		    public void handle(ActionEvent event) {
+		    	extraDefs++;
 		    	TextField newDefinition = new TextField();
 	        	newDefinition.setPromptText("New word...");
 	        	topRight.getChildren().add(newDefinition);
@@ -440,6 +439,17 @@ import javafx.scene.paint.Color;
         antsyn.getChildren().add(antField);
         
         Button confirmNewWord = new Button("Add");
+        EventHandler<ActionEvent> submit = new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent event) {
+		    	extraDefs = 0;
+		    	String newSpelling = spelling.getText();		    	
+		    	Words newWord = new Words(newSpelling, newDefinitions, newSynonoyms, newAntonyms);
+		    	
+		    }
+		};
+		
+		confirmNewWord.setOnAction(submit);
         confirmNewWord.setLayoutX(5);
      
         right.getChildren().addAll(topRight, antsyn);
@@ -459,10 +469,7 @@ import javafx.scene.paint.Color;
 	    HBox both = new HBox(left, right);
 	    both.setSpacing(20);
 	    content.add(both, 0, 0);
-	    
-	    list.getSelectionModel().clearSelection();
-	    ps.setScene(scene);
-	    ps.show();
+	   
     }
 	
 }
