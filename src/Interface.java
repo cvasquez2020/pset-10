@@ -47,7 +47,7 @@ import javafx.scene.paint.Color;
 		static Words lastWord = null;
 		static private List<Words> objsDisplayed;
 		static private List<String> currentWordList;
-		
+		static private VBox antsyn = new VBox();
 		static private CheckBox asc = new CheckBox("asc");
 	    static private CheckBox desc = new CheckBox("desc");
 	    
@@ -378,7 +378,7 @@ import javafx.scene.paint.Color;
     }
 	
 	public void addWordScreen(Stage ps, Scene scene, VBox left) {		
-		
+		VBox topRight = new VBox();
         
 		right.getChildren().clear();
 	    defHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21)); 
@@ -389,23 +389,15 @@ import javafx.scene.paint.Color;
         
         
         spelling.setText("Word");
-        right.getChildren().addAll(spelling);
+        topRight.getChildren().addAll(spelling);
         
         TextField addSpelling = new TextField();
         addSpelling.setPromptText("New word...");
-        right.getChildren().add(addSpelling);
+        topRight.getChildren().add(addSpelling);
         
-        Button extraDef = new Button("+");
-        EventHandler<ActionEvent> addDefField = new EventHandler<ActionEvent>() {
-		    @Override
-		    public void handle(ActionEvent event) {
-		    	extraDefs++;
-		        event.consume();
-		    }
-		};
-        extraDef.setOnAction(addDefField);
-        HBox DefField = new HBox(defHeader, extraDef);
-        right.getChildren().add(DefField);
+        
+      
+        
               
         ObservableList<String> partsOfSpeech = 
         	    FXCollections.observableArrayList(
@@ -413,33 +405,47 @@ import javafx.scene.paint.Color;
         	        "Noun",
         	        "Verb"
         	    );
-        
-        for (int i = 0; i < (3 + extraDefs); i++) {
+        Button extraDef = new Button("+");
+        EventHandler<ActionEvent> addDefField = new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent event) {
+		    	TextField newDefinition = new TextField();
+	        	newDefinition.setPromptText("New word...");
+	        	topRight.getChildren().add(newDefinition);
+	        	final ComboBox<String> addPOS = new ComboBox<String>(partsOfSpeech);
+	        	addPOS.setPromptText("Part of speech...");
+	        	topRight.getChildren().add(addPOS);  
+		    }
+		};
+		  extraDef.setOnAction(addDefField);
+	        HBox DefField = new HBox(defHeader, extraDef);
+	        topRight.getChildren().add(DefField);
+	        for (int i = 0; i < (3 + extraDefs); i++) {
         	TextField newDefinition = new TextField();
         	newDefinition.setPromptText("New word...");
-        	right.getChildren().add(newDefinition);
+        	topRight.getChildren().add(newDefinition);
         	final ComboBox<String> addPOS = new ComboBox<String>(partsOfSpeech);
         	addPOS.setPromptText("Part of speech...");
-        	right.getChildren().add(addPOS);        	
+        	topRight.getChildren().add(addPOS);        	
         }
        
-        right.getChildren().add(synHeader);
+        antsyn.getChildren().add(synHeader);
         TextField synField = new TextField();
         synField.setPromptText("Synonyms...");
-        right.getChildren().add(synField);
+        antsyn.getChildren().add(synField);
         
-        right.getChildren().add(antHeader);
+        antsyn.getChildren().add(antHeader);
         TextField antField = new TextField();
         antField.setPromptText("Antonyms...");
-        right.getChildren().add(antField);
+        antsyn.getChildren().add(antField);
         
         Button confirmNewWord = new Button("Add");
         confirmNewWord.setLayoutX(5);
      
+        right.getChildren().addAll(topRight, antsyn);
         
         
-        
-        right.getChildren().add(confirmNewWord);
+        antsyn.getChildren().add(confirmNewWord);
 	    Separator separator2 = new Separator();
 	    separator2.setOrientation(Orientation.VERTICAL);
 	    spelling.setStrokeWidth(2); 
