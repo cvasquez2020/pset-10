@@ -20,10 +20,6 @@ public class Words {
 		
 		this.synonyms = synonyms;
 		this.antonyms = antonyms;
-		//System.out.print(synonyms.size() + " <- Source length\n");
-		//System.out.print(this.synonyms.size() + " <- Dest Length");
-		//Collections.copy(this.synonyms, synonyms);
-		//Collections.copy(this.antonyms, antonyms);
 		this.wordId = nextId + 1;
 		nextId++;
 	
@@ -47,6 +43,9 @@ public class Words {
 	
 	public ArrayList<Definitions> getDefintion() {
 		return this.definitions;
+	}
+	public String getADefintion(int index) {
+		return this.definitions.get(index).getDefinition();
 	}
 	public ArrayList<String> getSynonyms() {
 		return this.synonyms;

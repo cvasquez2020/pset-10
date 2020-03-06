@@ -37,7 +37,6 @@ public class Dictionary {
 		return listOfWords;
 	}
 	
-	//@SuppressWarnings("null")
 	public static ArrayList<Words> sortObj(Boolean ascending, List<String> sortedSpellings) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		
 		wordList = addAllWords();

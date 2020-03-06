@@ -468,10 +468,9 @@ import javafx.scene.paint.Color;
 		    	try {
 					newWord = new Words(newSpelling, newDefs, synonyms, antonyms);
 				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		    	System.out.println(newWord.getSpelling());
+		    	
 		    	extraDefs = 0;
 
 		    }
