@@ -451,7 +451,8 @@ import javafx.scene.paint.Color;
 		    		
 		    		 if (true) {
 		    			 //@SuppressWarnings("unchecked")
-						Definitions newDefinition = new Definitions(((TextField)defFields.getChildren().get(i)).getText(), "Noun");
+						@SuppressWarnings("unchecked")
+						Definitions newDefinition = new Definitions(((TextField)defFields.getChildren().get(i)).getText(), ((ComboBox<String>) defFields.getChildren().get(i + 1)).getValue());
 		    			 System.out.print(newDefinition.getPartOfSpeech() + "     " + newDefinition.getDefinition());
 		    		 }
 		    		
