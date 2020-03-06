@@ -14,11 +14,16 @@ public class Words {
 	ArrayList<String> synonyms = new ArrayList<String>();
 	ArrayList<String> antonyms = new ArrayList<String>();
 	
-	public Words(String word, Definitions definitions, ArrayList<String> synonoyms, ArrayList<String> antonyms) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+	public Words(String word, ArrayList<Definitions> definitions, ArrayList<String> synonyms, ArrayList<String> antonyms) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		this.word = word;
-		this.definitions.add(definitions);
-		Collections.copy(this.synonyms, synonyms);
-		Collections.copy(this.antonyms, antonyms);
+		this.definitions = definitions;
+		
+		this.synonyms = synonyms;
+		this.antonyms = antonyms;
+		//System.out.print(synonyms.size() + " <- Source length\n");
+		//System.out.print(this.synonyms.size() + " <- Dest Length");
+		//Collections.copy(this.synonyms, synonyms);
+		//Collections.copy(this.antonyms, antonyms);
 		this.wordId = nextId + 1;
 		nextId++;
 	

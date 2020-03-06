@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
@@ -431,7 +432,7 @@ import javafx.scene.paint.Color;
         	addPOS.setPromptText("Part of speech...");
         	defFields.getChildren().add(addPOS);        	
         }
-	    Definitions[] newDefs = null;
+	    ArrayList<Definitions> newDefs = new ArrayList<Definitions>();
         antsyn.getChildren().add(synHeader);
         TextField synField = new TextField();
         synField.setPromptText("Synonyms...");
@@ -442,25 +443,37 @@ import javafx.scene.paint.Color;
         antField.setPromptText("Antonyms...");
         antsyn.getChildren().add(antField);
         
+        
         Button confirmNewWord = new Button("Add");
         EventHandler<ActionEvent> submit = new EventHandler<ActionEvent>() {
 		    @Override
 		    public void handle(ActionEvent event) {
-		    	extraDefs = 0;
-		    	for (int i = 1; i < (extraDefs + 3); i+=2) {
-		    		
-		    		 if (true) {
-		    			 //@SuppressWarnings("unchecked")
-						@SuppressWarnings("unchecked")
+		    	String[] tempAntonyms = synField.getText().split(",");
+		    	List<String> antList = Arrays.asList(tempAntonyms); 
+		    	ArrayList<String> antonyms = new ArrayList<String>(antList);
+		    	
+		    	String[] tempSynonyms = synField.getText().split(",");
+		    	List<String> synList = Arrays.asList(tempSynonyms); 
+		    	ArrayList<String> synonyms = new ArrayList<String>(synList);
+		    	for (int i = 1; i < (extraDefs + 3); i += 2) {	
+	
 						Definitions newDefinition = new Definitions(((TextField)defFields.getChildren().get(i)).getText(), ((ComboBox<String>) defFields.getChildren().get(i + 1)).getValue());
-		    			 System.out.print(newDefinition.getPartOfSpeech() + "     " + newDefinition.getDefinition());
-		    		 }
+		    			newDefs.add(newDefinition);
+						
+		    		 
 		    		
 		    	}
-		    	String newSpelling = spelling.getText();		  
-		    	
-		    	
-		    	
+		    	Words newWord = null;
+		    	String newSpelling = addSpelling.getText();		  
+		    	try {
+					newWord = new Words(newSpelling, newDefs, synonyms, antonyms);
+				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    	System.out.println(newWord.getSpelling());
+		    	extraDefs = 0;
+
 		    }
 		};
 		
