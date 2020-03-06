@@ -21,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -421,16 +422,16 @@ import javafx.scene.paint.Color;
 		};
 		  extraDef.setOnAction(addDefField);
 	        HBox DefField = new HBox(defHeader, extraDef);
-	        topRight.getChildren().add(DefField);
+	        defFields.getChildren().add(DefField);
 	        for (int i = 0; i < (3 + extraDefs); i++) {
         	TextField newDefinition = new TextField();
         	newDefinition.setPromptText("New word...");
-        	topRight.getChildren().add(newDefinition);
-        	final ComboBox<String> addPOS = new ComboBox<String>(partsOfSpeech);
+        	defFields.getChildren().add(newDefinition);
+        	ComboBox<String> addPOS = new ComboBox<String>(partsOfSpeech);
         	addPOS.setPromptText("Part of speech...");
-        	topRight.getChildren().add(addPOS);        	
+        	defFields.getChildren().add(addPOS);        	
         }
-       
+	    Definitions[] newDefs = null;
         antsyn.getChildren().add(synHeader);
         TextField synField = new TextField();
         synField.setPromptText("Synonyms...");
@@ -446,8 +447,14 @@ import javafx.scene.paint.Color;
 		    @Override
 		    public void handle(ActionEvent event) {
 		    	extraDefs = 0;
-		    	for (int i = 0; i < 2 * (extraDefs + 3); i+=2) {
-		    		defFields.getChildren().get(i);
+		    	for (int i = 1; i < (extraDefs + 3); i+=2) {
+		    		
+		    		 if (true) {
+		    			 //@SuppressWarnings("unchecked")
+						Definitions newDefinition = new Definitions(((TextField)defFields.getChildren().get(i)).getText(), "Noun");
+		    			 System.out.print(newDefinition.getPartOfSpeech() + "     " + newDefinition.getDefinition());
+		    		 }
+		    		
 		    	}
 		    	String newSpelling = spelling.getText();		  
 		    	

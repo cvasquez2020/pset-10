@@ -10,7 +10,7 @@ public class Definitions {
 	private String definition;
 	private String partOfSpeech;
 	
-	public void definitions(String definition, String partsOfSpeech) {
+	public Definitions(String definition, String partsOfSpeech) {
 		this.definition = definition;
 		this.partOfSpeech = partsOfSpeech;
 	}
