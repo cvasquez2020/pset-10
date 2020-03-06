@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -269,6 +270,7 @@ import javafx.scene.paint.Color;
 		      EventHandler<ActionEvent> addWord = new EventHandler<ActionEvent>() {
 				    @Override
 				    public void handle(ActionEvent event) {
+				    	
 				    	addWordScreen(primaryStage, scene, left);
 				        event.consume();
 				    }
@@ -377,7 +379,7 @@ import javafx.scene.paint.Color;
 	
 	public void addWordScreen(Stage ps, Scene scene, VBox left) {		
 		VBox topRight = new VBox();
-        
+        extraDefs = 0;
 		right.getChildren().clear();
 	    defHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21)); 
 	    synHeader.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
@@ -395,7 +397,8 @@ import javafx.scene.paint.Color;
         
         
       
-        
+        VBox defFields = new VBox();
+        VBox AntSyn = new VBox();
               
         ObservableList<String> partsOfSpeech = 
         	    FXCollections.observableArrayList(
@@ -410,10 +413,10 @@ import javafx.scene.paint.Color;
 		    	extraDefs++;
 		    	TextField newDefinition = new TextField();
 	        	newDefinition.setPromptText("New word...");
-	        	topRight.getChildren().add(newDefinition);
+	        	defFields.getChildren().add(newDefinition);
 	        	final ComboBox<String> addPOS = new ComboBox<String>(partsOfSpeech);
 	        	addPOS.setPromptText("Part of speech...");
-	        	topRight.getChildren().add(addPOS);  
+	        	defFields.getChildren().add(addPOS);  
 		    }
 		};
 		  extraDef.setOnAction(addDefField);
@@ -443,8 +446,12 @@ import javafx.scene.paint.Color;
 		    @Override
 		    public void handle(ActionEvent event) {
 		    	extraDefs = 0;
-		    	String newSpelling = spelling.getText();		    	
-		    	Words newWord = new Words(newSpelling, newDefinitions, newSynonoyms, newAntonyms);
+		    	for (int i = 0; i < 2 * (extraDefs + 3); i+=2) {
+		    		defFields.getChildren().get(i);
+		    	}
+		    	String newSpelling = spelling.getText();		  
+		    	
+		    	
 		    	
 		    }
 		};
@@ -452,7 +459,7 @@ import javafx.scene.paint.Color;
 		confirmNewWord.setOnAction(submit);
         confirmNewWord.setLayoutX(5);
      
-        right.getChildren().addAll(topRight, antsyn);
+        right.getChildren().addAll(topRight, defFields, antsyn);
         
         
         antsyn.getChildren().add(confirmNewWord);
