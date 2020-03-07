@@ -4,11 +4,18 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException; 
 import com.google.gson.Gson;
@@ -54,11 +61,34 @@ public class Dictionary {
 	}
 		return sortedObj;	
 	}
-	
-	private void addWord() {
-		//TODO implement adding words
+	public static Words[] addToList(int n, Words wordList[], Words word) 
+    { 
+        Words newWordList[] = new Words[n + 1]; 
+
+        for (int i = 0; i < n; i++) {
+            newWordList[i] = wordList[i]; 
+        }
+        newWordList[n] = word; 
+  
+        return newWordList; 
+    } 
+  
+	public static void addWord(Words word) {
+		
+		Gson gson=new GsonBuilder().setPrettyPrinting().create();
+		String json = gson.toJson(addToList(wordList.length, wordList, word));
+	  
+	  try {
+	   FileWriter writer = new FileWriter(".\\JSON\\\\words.json");
+	   writer.write(json);
+	   writer.close();
+	  
+	  } catch (IOException e) {
+	   e.printStackTrace();
+	  }
+	  
+
 	}
-	
 	private void delWord() {
 		//TODO implement deleting words
 	}

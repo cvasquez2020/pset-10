@@ -409,6 +409,7 @@ import javafx.scene.paint.Color;
         	        "Verb"
         	    );
         Button extraDef = new Button("+");
+        
         EventHandler<ActionEvent> addDefField = new EventHandler<ActionEvent>() {
 		    @Override
 		    public void handle(ActionEvent event) {
@@ -470,7 +471,7 @@ import javafx.scene.paint.Color;
 				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 					e.printStackTrace();
 				}
-		    	
+		    	Dictionary.addWord(newWord);
 		    	extraDefs = 0;
 
 		    }
