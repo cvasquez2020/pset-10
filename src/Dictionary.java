@@ -33,10 +33,15 @@ public class Dictionary {
 		return wordList;
 	}
 	
-	public static ArrayList<String> listSpellings(Boolean ascending) {
+	public static ArrayList<String> listSpellings(Boolean ascending) throws NullPointerException {
 		ArrayList<String> listOfWords = new ArrayList<String>();
 		
-		for (Words word : wordList) {
+		int i = 0;
+		for (Words word : wordList)  {
+			if (word == null) {
+				System.out.println("this one is null " + i);
+			}
+			
 			listOfWords.add(word.getSpelling());
 		}
 		
@@ -83,6 +88,7 @@ public class Dictionary {
 	  wordList = addToList(wordList.length, wordList, word);
 	  try {
 	   FileWriter writer = new FileWriter(".\\JSON\\words.json");
+	   wordList = addAllWords();
 	   writer.write(json);
 	   writer.close();
 	  
@@ -99,19 +105,25 @@ public class Dictionary {
         	kill = false;
         	for (Words deadWord : wordsToDel) {
         		if (wordList[i] == deadWord) {
+
         			kill = true;
         		}
+        		if (!kill) {
+            		newWordList[i] = wordList[i];
+            	} else {
+            		newWordList[i] = wordList[i + 1];
+            	}
         	}
-        	if (!kill) {
-        		newWordList[i] = wordList[i];
-        	}
+        	
         }
 
         wordList = newWordList;
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(wordList);
 		try {
+			
 			   FileWriter writer = new FileWriter(".\\JSON\\words.json");
+			  
 			   writer.write(json);
 			   writer.close();
 			  
