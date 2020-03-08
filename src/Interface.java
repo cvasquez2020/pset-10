@@ -80,6 +80,7 @@ import javafx.scene.paint.Color;
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		Dictionary.addAllWords();
 		firstWord = true;
+		scroll.setPrefWidth(900);
 		asc.setSelected(true);
 	    launch(args);
 	    
@@ -289,13 +290,13 @@ import javafx.scene.paint.Color;
 	      
 	      list.setPrefWidth(150);
 	      list.setPrefHeight(maxHeight);
-	      
+	      scroll.setContent(right); 
 	      left  = new VBox(buttons, filterInput, check, separator1, list);
 	      left.setSpacing(5);
 	      right.setSpacing(10);
 	      left.setPadding(new Insets(2, 2, 2, 2));
 	      GridPane.setMargin(right, new Insets(2,10,2,2));
-	      HBox both = new HBox(left, right);
+	      HBox both = new HBox(left, scroll);
 	      both.setSpacing(20);
 	      content.add(both, 0, 0);
 	      
@@ -419,7 +420,7 @@ import javafx.scene.paint.Color;
 	      spelling.setStrokeWidth(2); 
 	      
 	      HBox buttons = new HBox(addButton, rmButton);
-	      
+	      scroll.setContent(right); 
 	      list.setPrefWidth(150);
 	      int maxHeight = 600;
 		list.setPrefHeight(maxHeight);
@@ -428,7 +429,7 @@ import javafx.scene.paint.Color;
 	      right.setSpacing(10);
 	      left.setPadding(new Insets(2, 2, 2, 2));
 	      GridPane.setMargin(right, new Insets(2,10,2,2));
-	      HBox both = new HBox(left, right);
+	      HBox both = new HBox(left, scroll);
 	      both.setSpacing(20);
 	      content.add(both, 0, 0);
 	      
@@ -449,7 +450,8 @@ import javafx.scene.paint.Color;
 	      ps.show();
     }
 	
-	public void addWordScreen(Stage ps, Scene scene, VBox left) {		
+	public void addWordScreen(Stage ps, Scene scene, VBox left) {
+		right.getChildren().clear();
 		VBox topRight = new VBox();
         extraDefs = 0;
 		right.getChildren().clear();
@@ -470,7 +472,6 @@ import javafx.scene.paint.Color;
         
       
         VBox defFields = new VBox();
-        VBox AntSyn = new VBox();
               
         ObservableList<String> partsOfSpeech = 
         	    FXCollections.observableArrayList(
@@ -483,6 +484,7 @@ import javafx.scene.paint.Color;
         EventHandler<ActionEvent> addDefField = new EventHandler<ActionEvent>() {
 		    @Override
 		    public void handle(ActionEvent event) {
+		    	
 		    	extraDefs++;
 		    	TextField newDefinition = new TextField();
 	        	newDefinition.setPromptText("New word...");
@@ -504,6 +506,7 @@ import javafx.scene.paint.Color;
         	defFields.getChildren().add(addPOS);        	
         }
 	    ArrayList<Definitions> newDefs = new ArrayList<Definitions>();
+	    antsyn.getChildren().clear();
         antsyn.getChildren().add(synHeader);
         TextField synField = new TextField();
         synField.setPromptText("Synonyms...");
@@ -568,7 +571,7 @@ import javafx.scene.paint.Color;
      
         right.getChildren().addAll(topRight, defFields, antsyn);
         
-        
+        scroll.setContent(right); 
         antsyn.getChildren().add(confirmNewWord);
 	    Separator separator2 = new Separator();
 	    separator2.setOrientation(Orientation.VERTICAL);
@@ -579,8 +582,8 @@ import javafx.scene.paint.Color;
 	    left.setSpacing(5);
 	    right.setSpacing(10);
 	    left.setPadding(new Insets(2, 2, 2, 2));
-	    GridPane.setMargin(right, new Insets(2,10,2,2));
-	    HBox both = new HBox(left, right);
+	    GridPane.setMargin(scroll, new Insets(2,10,2,2));
+	    HBox both = new HBox(left, scroll);
 	    both.setSpacing(20);
 	    content.add(both, 0, 0);
 	   
