@@ -33,10 +33,11 @@ public class Dictionary {
 		return wordList;
 	}
 	
-	public static ArrayList<String> listSpellings(Boolean ascending) {
+	public static ArrayList<String> listSpellings(Boolean ascending) throws NullPointerException {
 		ArrayList<String> listOfWords = new ArrayList<String>();
 		
 		for (Words word : wordList) {
+			
 			listOfWords.add(word.getSpelling());
 		}
 		
@@ -48,7 +49,7 @@ public class Dictionary {
 		return listOfWords;
 	}
 	
-	public static ArrayList<Words> sortObj(Boolean ascending, List<String> sortedSpellings) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+	public static ArrayList<Words> sortObj(Boolean ascending, List<String> sortedSpellings) throws JsonSyntaxException, JsonIOException, FileNotFoundException  {
 		
 		wordList = addAllWords();
 		ArrayList<Words> sortedObj = new ArrayList<Words>();
@@ -92,7 +93,7 @@ public class Dictionary {
 	  
 
 	}
-	public static void delWord(Words[] wordsToDel) { 
+	public static void delWord(Words[] wordsToDel) throws JsonSyntaxException, JsonIOException, FileNotFoundException { 
         Words newWordList[] = new Words[wordList.length - wordsToDel.length]; 
         Boolean kill = false;
         for (int i = 0; i < newWordList.length; i++) {
@@ -106,10 +107,8 @@ public class Dictionary {
         		newWordList[i] = wordList[i];
         	}
         }
-        
-        System.out.print(newWordList.length);
-        System.out.print(wordList.length);
-        wordList = newWordList;
+
+        wordList = addAllWords();
         Gson gson=new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(wordList);
 		try {
@@ -120,6 +119,7 @@ public class Dictionary {
 			  } catch (IOException e) {
 			   e.printStackTrace();
 			  }
+		
     } 
 	
 }

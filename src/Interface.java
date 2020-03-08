@@ -73,6 +73,7 @@ import javafx.scene.paint.Color;
 		
 		private GridPane content;
 		private TextField filterInput;
+		private Scene scene;
 		private static int extraDefs = 0;
 		private static VBox left = new VBox();
 		private static Button addButton = new Button("Add");
@@ -112,13 +113,30 @@ import javafx.scene.paint.Color;
 		    					}
 		    				}
 		    			}
-		    			
-		    			System.out.print(wordsToDelete[0].getSpelling());
 						Dictionary.delWord(wordsToDelete);
+												Alert success = new Alert(AlertType.INFORMATION);
+						Dictionary.addAllWords();
+						data.clear();
+						
+
+						objsDisplayed = Dictionary.sortObj(ascending, currentWordList);
+						start(primaryStage);
+						display(ascending, primaryStage, scene);
+						
+						
+						 success.setHeaderText("Successfully deleted word(s)");
+						Optional<ButtonType> done = success.showAndWait();
+						
+						 if (done.isPresent() && done.get() == ButtonType.OK) {
+				    	     event.consume();
+				    	 }
 					} catch (JsonIOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (JsonSyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}		    	
@@ -282,7 +300,7 @@ import javafx.scene.paint.Color;
 	      both.setSpacing(20);
 	      content.add(both, 0, 0);
 	      
-	     Scene scene = new Scene(content, 1100, maxHeight);
+	     scene = new Scene(content, 1100, maxHeight);
 	     
 		      
 	        desc.selectedProperty().addListener(new ChangeListener<Boolean>() {
