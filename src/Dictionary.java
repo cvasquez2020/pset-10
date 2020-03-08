@@ -80,7 +80,7 @@ public class Dictionary {
 		
 		Gson gson=new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(addToList(wordList.length, wordList, word));
-	  
+	  wordList = addToList(wordList.length, wordList, word);
 	  try {
 	   FileWriter writer = new FileWriter(".\\JSON\\words.json");
 	   writer.write(json);
@@ -108,7 +108,7 @@ public class Dictionary {
         }
 
         wordList = newWordList;
-        Gson gson=new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(wordList);
 		try {
 			   FileWriter writer = new FileWriter(".\\JSON\\words.json");

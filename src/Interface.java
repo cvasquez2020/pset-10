@@ -131,6 +131,7 @@ import javafx.scene.paint.Color;
 						    
 						display(ascending, primaryStage, scene);
 						Alert success = new Alert(AlertType.INFORMATION);
+						success.setHeaderText("Successfully deleted word!");
 						Optional<ButtonType> done = success.showAndWait();
 						
 						 if (done.isPresent() && done.get() == ButtonType.OK) {
@@ -447,8 +448,7 @@ import javafx.scene.paint.Color;
 			    }
 			};
 			addButton.setOnAction(addWord);
-		    //rmButton.setOnAction(removeWord);
-		list.getSelectionModel().clearSelection();
+		  list.getSelectionModel().clearSelection();
 	      ps.setScene(scene);
 	      ps.show();
     }
@@ -546,6 +546,22 @@ import javafx.scene.paint.Color;
 					e.printStackTrace();
 				}
 		    	Dictionary.addWord(newWord);
+		    	data.clear();
+				  filterInput.textProperty().addListener(obs->{
+				    	
+				        String filter = filterInput.getText(); 
+				        if (filter == null || filter.length() == 0) {
+				            filteredData.setPredicate(s -> true);
+				        }
+				        else {
+				            filteredData.setPredicate(s -> s.matches(filter + ".*"));
+				        }
+				        
+				    });
+				   
+				    currentWordList = filteredData;
+				    
+				display(ascending, ps, scene);
 		    	extraDefs = 0;
 
 		    }
