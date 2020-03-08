@@ -114,17 +114,23 @@ import javafx.scene.paint.Color;
 		    				}
 		    			}
 						Dictionary.delWord(wordsToDelete);
-												Alert success = new Alert(AlertType.INFORMATION);
-						Dictionary.addAllWords();
 						data.clear();
-						
-
-						objsDisplayed = Dictionary.sortObj(ascending, currentWordList);
-						start(primaryStage);
+						  filterInput.textProperty().addListener(obs->{
+						    	
+						        String filter = filterInput.getText(); 
+						        if (filter == null || filter.length() == 0) {
+						            filteredData.setPredicate(s -> true);
+						        }
+						        else {
+						            filteredData.setPredicate(s -> s.matches(filter + ".*"));
+						        }
+						        
+						    });
+						   
+						    currentWordList = filteredData;
+						    
 						display(ascending, primaryStage, scene);
-						
-						
-						 success.setHeaderText("Successfully deleted word(s)");
+						Alert success = new Alert(AlertType.INFORMATION);
 						Optional<ButtonType> done = success.showAndWait();
 						
 						 if (done.isPresent() && done.get() == ButtonType.OK) {
@@ -134,9 +140,6 @@ import javafx.scene.paint.Color;
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (JsonSyntaxException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}		    	
@@ -194,7 +197,6 @@ import javafx.scene.paint.Color;
 
 		public void changed(ObservableValue<? extends String> observable,
               String oldValue, String newValue) {
-			//System.out.print(list.getSelectionModel().getSelectedItems());
 			
 			if (list.getSelectionModel().getSelectedIndices().size() == 1 && (firstWord || currentWordList.contains(currentWord.getSpelling()))) {
 			 index = currentWordList.indexOf(list.getSelectionModel().getSelectedItem());
