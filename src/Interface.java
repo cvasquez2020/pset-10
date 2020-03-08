@@ -107,11 +107,13 @@ import javafx.scene.paint.Color;
 		    			Words[] wordsToDelete = new Words[list.getSelectionModel().getSelectedIndices().size()];
 		    			for (int i = 0; i < list.getSelectionModel().getSelectedItems().size(); i++) {
 		    				for (Words orgWord : Dictionary.wordList) {
-		    					if (!orgWord.getSpelling().equals(list.getSelectionModel().getSelectedItems().get(i))) {
+		    					if (orgWord.getSpelling().equals(list.getSelectionModel().getSelectedItems().get(i))) {
 		    						wordsToDelete[i] = orgWord;
 		    					}
 		    				}
 		    			}
+		    			
+		    			System.out.print(wordsToDelete[0].getSpelling());
 						Dictionary.delWord(wordsToDelete);
 					} catch (JsonIOException e) {
 						// TODO Auto-generated catch block
