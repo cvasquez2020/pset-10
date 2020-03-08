@@ -3,12 +3,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Labeled;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -18,32 +16,25 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.SelectionModel;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-
 import javafx.beans.value.ChangeListener;
-
 import javafx.scene.paint.Color;
 
 	public class Interface extends Application {
@@ -135,10 +126,8 @@ import javafx.scene.paint.Color;
 				    	     event.consume();
 				    	 }
 					} catch (JsonIOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (JsonSyntaxException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}		    	
 		    	} else {
@@ -529,7 +518,8 @@ import javafx.scene.paint.Color;
         
         Button confirmNewWord = new Button("Add");
         EventHandler<ActionEvent> submit = new EventHandler<ActionEvent>() {
-		    @Override
+		    @SuppressWarnings("unchecked")
+			@Override
 		    public void handle(ActionEvent event) {
 		    	String[] tempAntonyms =  antField.getText().split(",");
 		    	List<String> antList = Arrays.asList(tempAntonyms); 

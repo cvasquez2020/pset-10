@@ -1,29 +1,13 @@
-//package reading_file;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import com.google.gson.JsonSyntaxException; 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 
 public class Dictionary {
 	public static Words[] wordList;
