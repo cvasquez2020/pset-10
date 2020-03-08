@@ -117,12 +117,12 @@ import javafx.scene.paint.Color;
 						data.clear();
 						  filterInput.textProperty().addListener(obs->{
 						    	
-						        String filter = filterInput.getText(); 
+						        String filter = filterInput.getText().toLowerCase(); 
 						        if (filter == null || filter.length() == 0) {
 						            filteredData.setPredicate(s -> true);
 						        }
 						        else {
-						            filteredData.setPredicate(s -> s.matches(filter + ".*"));
+						            filteredData.setPredicate(s -> s.toLowerCase().matches(filter + ".*"));
 						        }
 						        
 						    });
@@ -172,12 +172,12 @@ import javafx.scene.paint.Color;
 	    
 	    filterInput.textProperty().addListener(obs->{
 	    	
-	        String filter = filterInput.getText(); 
+	        String filter = filterInput.getText().toLowerCase(); 
 	        if (filter == null || filter.length() == 0) {
 	            filteredData.setPredicate(s -> true);
 	        }
 	        else {
-	            filteredData.setPredicate(s -> s.matches(filter + ".*"));
+	            filteredData.setPredicate(s -> s.toLowerCase().matches(filter + ".*"));
 	        }
 	        
 	    });
