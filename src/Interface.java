@@ -242,10 +242,11 @@ import javafx.scene.paint.Color;
           
            if (index >= 0) {
            synonyms = currentWord.getSynonyms();
+           right.getChildren().add(synHeader);
            for (String syn : synonyms) {
         	   right.getChildren().addAll(new Text("\t" + ((int) synonyms.indexOf(syn) + 1) + ". " +  syn));
            }
-           right.getChildren().add(synHeader);
+           
            }
           
            
@@ -384,10 +385,10 @@ import javafx.scene.paint.Color;
        
         if (currentWord != null) {
         synonyms = currentWord.getSynonyms();
+        right.getChildren().add(synHeader);
         for (String syn : synonyms) {
      	   right.getChildren().addAll(new Text("\t" + ((int) synonyms.indexOf(syn) + 1) + ". " +  syn));
         }
-        right.getChildren().add(synHeader);
         }
        
         
@@ -526,8 +527,12 @@ import javafx.scene.paint.Color;
 		    	List<String> synList = Arrays.asList(tempSynonyms); 
 		    	ArrayList<String> synonyms = new ArrayList<String>(synList);
 		    	for (int i = 1; i < (extraDefs + 3); i += 2) {	
+	
 						Definitions newDefinition = new Definitions(((TextField)defFields.getChildren().get(i)).getText(), ((ComboBox<String>) defFields.getChildren().get(i + 1)).getValue());
-		    			newDefs.add(newDefinition);		    		 
+		    			newDefs.add(newDefinition);
+						
+		    		 
+		    		
 		    	}
 		    	Words newWord = null;
 		    	String newSpelling = addSpelling.getText();		  
