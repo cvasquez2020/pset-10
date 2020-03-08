@@ -81,6 +81,7 @@ import javafx.scene.paint.Color;
 		Dictionary.addAllWords();
 		firstWord = true;
 		scroll.setPrefWidth(900);
+		scroll.setPadding(new Insets(20, 10, 10, 20));
 		asc.setSelected(true);
 	    launch(args);
 	    
@@ -114,16 +115,16 @@ import javafx.scene.paint.Color;
 						data.clear();
 						filterInput.textProperty().addListener(obs->{
 						    	
-						        String filter = filterInput.getText().toLowerCase(); 
+						        String filter = filterInput.getText(); 
 						        if (filter == null || filter.length() == 0) {
 						            filteredData.setPredicate(s -> true);
 						        }
 						        else {
-						            filteredData.setPredicate(s -> s.toLowerCase().matches(filter + ".*"));
+						            filteredData.setPredicate(s -> s.matches(filter + ".*"));
 						        }
 						    });
 						   
-						    currentWordList = filteredData;
+						currentWordList = filteredData;
 						    
 						display(ascending, primaryStage, scene);
 						Alert success = new Alert(AlertType.INFORMATION);
@@ -168,12 +169,12 @@ import javafx.scene.paint.Color;
 	    
 	    filterInput.textProperty().addListener(obs->{
 	    	
-	        String filter = filterInput.getText().toLowerCase(); 
+	        String filter = filterInput.getText(); 
 	        if (filter == null || filter.length() == 0) {
 	            filteredData.setPredicate(s -> true);
 	        }
 	        else {
-	            filteredData.setPredicate(s -> s.toLowerCase().matches(filter + ".*"));
+	            filteredData.setPredicate(s -> s.matches(filter + ".*"));
 	        }
 	        
 	    });
@@ -243,7 +244,9 @@ import javafx.scene.paint.Color;
           
            if (index >= 0) {
            synonyms = currentWord.getSynonyms();
-           right.getChildren().add(synHeader);
+           if (synonyms.size() > 0) {
+        	   right.getChildren().add(synHeader);	
+           }
            for (String syn : synonyms) {
         	   right.getChildren().addAll(new Text("\t" + ((int) synonyms.indexOf(syn) + 1) + ". " +  syn));
            }
@@ -253,8 +256,9 @@ import javafx.scene.paint.Color;
            
            if (index >= 0) {
         	   antonyms = currentWord.getAntonyms();
-               
+               if (antonyms.size() > 0) {
                right.getChildren().add(antHeader);
+               }
               for (String ant : antonyms) {
             	  right.getChildren().addAll(new Text("\t" +  ((int) antonyms.indexOf(ant) + 1) + ". " + ant));
               }
@@ -386,7 +390,9 @@ import javafx.scene.paint.Color;
        
         if (currentWord != null) {
         synonyms = currentWord.getSynonyms();
-        right.getChildren().add(synHeader);
+        if (synonyms.size() > 0) {
+	    	right.getChildren().add(synHeader);
+	    }
         for (String syn : synonyms) {
      	   right.getChildren().addAll(new Text("\t" + ((int) synonyms.indexOf(syn) + 1) + ". " +  syn));
         }
@@ -395,8 +401,9 @@ import javafx.scene.paint.Color;
         
         if (currentWord != null) {
      	   antonyms = currentWord.getAntonyms();
-            
+     	  if (antonyms.size() > 0) {
             right.getChildren().add(antHeader);
+     	  }
            for (String ant : antonyms) {
          	  right.getChildren().addAll(new Text("\t" +  ((int) antonyms.indexOf(ant) + 1) + ". " + ant));
            }
@@ -507,12 +514,14 @@ import javafx.scene.paint.Color;
         }
 	    ArrayList<Definitions> newDefs = new ArrayList<Definitions>();
 	    antsyn.getChildren().clear();
-        antsyn.getChildren().add(synHeader);
+	    antsyn.getChildren().add(synHeader);
         TextField synField = new TextField();
         synField.setPromptText("Synonyms...");
         antsyn.getChildren().add(synField);
         
+       
         antsyn.getChildren().add(antHeader);
+        
         TextField antField = new TextField();
         antField.setPromptText("Antonyms...");
         antsyn.getChildren().add(antField);
