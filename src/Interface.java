@@ -46,7 +46,6 @@ import javafx.beans.value.ChangeListener;
 
 import javafx.scene.paint.Color;
 
-
 	public class Interface extends Application {
 		static private Text spelling = new Text();
 		static final Text defHeader = new Text("Definitions");
@@ -66,18 +65,15 @@ import javafx.scene.paint.Color;
         static private ArrayList<String> synonyms = new ArrayList<String>();
         static private ArrayList<String> antonyms = new ArrayList<String>();
 		static int index;
-		
 		ObservableList<String> data = FXCollections.observableArrayList();
 		FilteredList<String> filteredData = new FilteredList<>(data, s -> true);
 		ListView<String> list = new ListView<String>(filteredData);
-		
 		private GridPane content;
 		private TextField filterInput;
 		private Scene scene;
 		private static int extraDefs = 0;
 		private static VBox left = new VBox();
 		private static Button addButton = new Button("Add");
-		
 		private static Button rmButton = new Button("Remove");
 		static ScrollPane scroll = new ScrollPane();
 		
@@ -115,7 +111,7 @@ import javafx.scene.paint.Color;
 		    			}
 						Dictionary.delWord(wordsToDelete);
 						data.clear();
-						  filterInput.textProperty().addListener(obs->{
+						filterInput.textProperty().addListener(obs->{
 						    	
 						        String filter = filterInput.getText().toLowerCase(); 
 						        if (filter == null || filter.length() == 0) {
@@ -124,7 +120,6 @@ import javafx.scene.paint.Color;
 						        else {
 						            filteredData.setPredicate(s -> s.toLowerCase().matches(filter + ".*"));
 						        }
-						        
 						    });
 						   
 						    currentWordList = filteredData;
@@ -523,7 +518,7 @@ import javafx.scene.paint.Color;
         EventHandler<ActionEvent> submit = new EventHandler<ActionEvent>() {
 		    @Override
 		    public void handle(ActionEvent event) {
-		    	String[] tempAntonyms = synField.getText().split(",");
+		    	String[] tempAntonyms =  antField.getText().split(",");
 		    	List<String> antList = Arrays.asList(tempAntonyms); 
 		    	ArrayList<String> antonyms = new ArrayList<String>(antList);
 		    	
@@ -531,12 +526,8 @@ import javafx.scene.paint.Color;
 		    	List<String> synList = Arrays.asList(tempSynonyms); 
 		    	ArrayList<String> synonyms = new ArrayList<String>(synList);
 		    	for (int i = 1; i < (extraDefs + 3); i += 2) {	
-	
 						Definitions newDefinition = new Definitions(((TextField)defFields.getChildren().get(i)).getText(), ((ComboBox<String>) defFields.getChildren().get(i + 1)).getValue());
-		    			newDefs.add(newDefinition);
-						
-		    		 
-		    		
+		    			newDefs.add(newDefinition);		    		 
 		    	}
 		    	Words newWord = null;
 		    	String newSpelling = addSpelling.getText();		  

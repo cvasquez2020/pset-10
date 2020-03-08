@@ -38,6 +38,7 @@ public class Dictionary {
 		
 		int i = 0;
 		for (Words word : wordList)  {
+        	System.out.println("\n");
 			if (word == null) {
 				System.out.println("this one is null " + i);
 			}
@@ -77,7 +78,10 @@ public class Dictionary {
             newWordList[i] = wordList[i]; 
         }
         newWordList[n] = word; 
-  
+        for (Words wordLis : newWordList) {
+        	System.out.println(wordLis.getSpelling());
+        	System.out.println("\n");
+        }
         return newWordList; 
     } 
   
@@ -105,7 +109,6 @@ public class Dictionary {
         	kill = false;
         	for (Words deadWord : wordsToDel) {
         		if (wordList[i] == deadWord) {
-
         			kill = true;
         		}
         		if (!kill) {
