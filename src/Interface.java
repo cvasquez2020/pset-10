@@ -2,6 +2,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import javafx.scene.control.CheckBox;
@@ -18,10 +20,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
@@ -54,7 +60,7 @@ import javafx.scene.paint.Color;
 		static private VBox antsyn = new VBox();
 		static private CheckBox asc = new CheckBox("asc");
 	    static private CheckBox desc = new CheckBox("desc");
-	    
+	    static private Boolean firstWord;
 	    static private ArrayList<Definitions> definitions = new ArrayList<Definitions>();
 	    private static VBox right = new VBox();
         static private ArrayList<String> synonyms = new ArrayList<String>();
@@ -76,7 +82,7 @@ import javafx.scene.paint.Color;
 		
 	public static void main(String[] args) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		Dictionary.addAllWords();
-		
+		firstWord = true;
 		asc.setSelected(true);
 	    launch(args);
 	    
@@ -89,8 +95,45 @@ import javafx.scene.paint.Color;
 		EventHandler<ActionEvent> removeWord = new EventHandler<ActionEvent>() {
 		    @Override
 		    public void handle(ActionEvent event) {
-		       rmButton.setText("rmWorks");
-		        event.consume();
+		    	if (list.getSelectionModel().getSelectedItems().size() != 0) { 
+		    	Alert alert = new Alert(AlertType.CONFIRMATION);
+		    	alert.setTitle("Confirmation Dialog");
+		    	alert.setHeaderText("DELETING WORD");
+		    	alert.setContentText("Are you sure you want to delete selected words?");
+
+		    	Optional<ButtonType> result = alert.showAndWait();
+		    	if (result.get() == ButtonType.OK && list.getSelectionModel().getSelectedIndices() != null) {
+		    		try {
+		    			Words[] wordsToDelete = new Words[list.getSelectionModel().getSelectedIndices().size()];
+		    			for (int i = 0; i < list.getSelectionModel().getSelectedItems().size(); i++) {
+		    				for (Words orgWord : Dictionary.wordList) {
+		    					if (!orgWord.getSpelling().equals(list.getSelectionModel().getSelectedItems().get(i))) {
+		    						wordsToDelete[i] = orgWord;
+		    					}
+		    				}
+		    			}
+						Dictionary.delWord(wordsToDelete);
+					} catch (JsonIOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JsonSyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}		    	
+		    	} else {
+		    		event.consume();
+		    	}
+		      event.consume();
+		    } else {
+		    	Alert alert = new Alert(AlertType.ERROR);
+		    	alert.setTitle("ERROR");
+		    	alert.setHeaderText("No words to delete...");
+		    	Optional<ButtonType> result = alert.showAndWait();
+		    	 if (result.isPresent() && result.get() == ButtonType.OK) {
+		    	     event.consume();
+		    	 }
+		    	event.consume();
+		    }
 		    }
 		};
 		
@@ -123,7 +166,7 @@ import javafx.scene.paint.Color;
 	    content = new GridPane();
 	    
 	    content.setPadding(new Insets(5, 10, 5, 5));
-	    
+	    list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 	    list.getSelectionModel().selectedItemProperty()
         .addListener(new ChangeListener<String>() {
           
@@ -131,6 +174,9 @@ import javafx.scene.paint.Color;
 
 		public void changed(ObservableValue<? extends String> observable,
               String oldValue, String newValue) {
+			//System.out.print(list.getSelectionModel().getSelectedItems());
+			
+			if (list.getSelectionModel().getSelectedIndices().size() == 1 && (firstWord || currentWordList.contains(currentWord.getSpelling()))) {
 			 index = currentWordList.indexOf(list.getSelectionModel().getSelectedItem());
 	            
 	     	   
@@ -198,6 +244,10 @@ import javafx.scene.paint.Color;
                 currentWord = null;
             	right.getChildren().clear();
             }
+			} else {
+				currentWord = null;
+				right.getChildren().clear();
+			}
           }
         });
 	    
@@ -306,12 +356,13 @@ import javafx.scene.paint.Color;
          	right.getChildren().addAll(spelling);
          	right.getChildren().addAll(defHeader);
          	definitions = currentWord.getDefintion();
+         	 for (Definitions def : definitions) {
+           	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " + currentWord.getSpelling() + " (" + def.getPartOfSpeech() + ")"));
+           	   right.getChildren().addAll(new Text("\t" + def.getDefinition()));
+              }
          }
          
-        for (Definitions def : definitions) {
-     	   right.getChildren().addAll(new Text(definitions.indexOf(def) + 1 + ". " + currentWord.getSpelling() + " (" + def.getPartOfSpeech() + ")"));
-     	   right.getChildren().addAll(new Text("\t" + def.getDefinition()));
-        }
+       
        
         if (currentWord != null) {
         synonyms = currentWord.getSynonyms();
@@ -330,7 +381,8 @@ import javafx.scene.paint.Color;
          	  right.getChildren().addAll(new Text("\t" +  ((int) antonyms.indexOf(ant) + 1) + ". " + ant));
            }
            if ( currentWord != null && !currentWordList.contains(currentWord.getSpelling())) {
-        	   System.out.println("334");
+        	   	currentWord = null;
+        	   	
             	right.getChildren().clear();
             }
    	      
@@ -362,7 +414,7 @@ import javafx.scene.paint.Color;
 	      content.add(both, 0, 0);
 	      
 	      if (currentWord != null && !currentWordList.contains(currentWord.getSpelling())) {
-          	System.out.println("366");
+	    	  currentWord = null;
           	right.getChildren().clear();
           }
 	      EventHandler<ActionEvent> addWord = new EventHandler<ActionEvent>() {

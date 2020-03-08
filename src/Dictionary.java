@@ -16,7 +16,11 @@ import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import com.google.gson.JsonSyntaxException; 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -61,8 +65,7 @@ public class Dictionary {
 	}
 		return sortedObj;	
 	}
-	public static Words[] addToList(int n, Words wordList[], Words word) 
-    { 
+	public static Words[] addToList(int n, Words wordList[], Words word) { 
         Words newWordList[] = new Words[n + 1]; 
 
         for (int i = 0; i < n; i++) {
@@ -79,7 +82,7 @@ public class Dictionary {
 		String json = gson.toJson(addToList(wordList.length, wordList, word));
 	  
 	  try {
-	   FileWriter writer = new FileWriter(".\\JSON\\\\words.json");
+	   FileWriter writer = new FileWriter(".\\JSON\\words.json");
 	   writer.write(json);
 	   writer.close();
 	  
@@ -89,8 +92,21 @@ public class Dictionary {
 	  
 
 	}
-	private void delWord() {
-		//TODO implement deleting words
-	}
+	public static void delWord(Words[] wordsToDel) { 
+        Words newWordList[] = new Words[wordList.length - wordsToDel.length]; 
+        Boolean kill = false;
+        for (int i = 0; i < newWordList.length; i++) {
+        	kill = false;
+        	for (Words deadWord : wordsToDel) {
+        		if (wordList[i] == deadWord) {
+        			kill = true;
+        		}
+        	}
+        	if (!kill) {
+        		newWordList[i] = wordList[i];
+        	}
+        }
+        wordList = newWordList;
+    } 
 	
 }
