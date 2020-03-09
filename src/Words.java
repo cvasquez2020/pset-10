@@ -10,8 +10,7 @@ public class Words {
 	ArrayList<String> antonyms = new ArrayList<String>();
 	
 	public Words(String word, ArrayList<Definitions> definitions, ArrayList<String> synonyms, ArrayList<String> antonyms) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
-		this.word = word.substring(0, 1).toUpperCase() + word.substring(1, word.length() + 1).toLowerCase();
-		System.out.print(this.word);
+		this.word = word.substring(0, 1).toUpperCase() + word.substring(1, word.length()).toLowerCase();
 		this.definitions = definitions;
 		this.synonyms = synonyms;
 		this.antonyms = antonyms;

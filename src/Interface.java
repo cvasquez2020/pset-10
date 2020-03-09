@@ -78,6 +78,16 @@ import javafx.scene.paint.Color;
 	    
 	}
 	
+	private void resetAddingWord(String message, ActionEvent event) {
+		Alert badInput = new Alert(AlertType.ERROR);
+		badInput.setTitle("Invalid input!");
+		badInput.setHeaderText(message);
+		Optional<ButtonType> done = badInput.showAndWait();
+		
+		 if (done.isPresent() && done.get() == ButtonType.OK) {
+   	     event.consume();
+   	 }
+	}
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -524,25 +534,47 @@ import javafx.scene.paint.Color;
 		    	String[] tempAntonyms =  antField.getText().split(",");
 		    	List<String> antList = Arrays.asList(tempAntonyms); 
 		    	ArrayList<String> antonyms = new ArrayList<String>(antList);
-		    	
 		    	String[] tempSynonyms = synField.getText().split(",");
 		    	List<String> synList = Arrays.asList(tempSynonyms); 
 		    	ArrayList<String> synonyms = new ArrayList<String>(synList);
+
+		    	int viableDefs = 0;
 		    	for (int i = 1; i < (extraDefs + 3); i += 2) {	
-	
-						Definitions newDefinition = new Definitions(((TextField)defFields.getChildren().get(i)).getText(), ((ComboBox<String>) defFields.getChildren().get(i + 1)).getValue());
-		    			newDefs.add(newDefinition);
-						
-		    		 
-		    		
+						Definitions newDefinition = new Definitions(((TextField)defFields.getChildren().get(i)).getText(), ((ComboBox<String>) defFields.getChildren().get(i + 1)).getValue());					
+						if (newDefinition.getDefinition() != null && !newDefinition.getDefinition().isEmpty() && newDefinition.getPartOfSpeech() != null) {
+							newDefs.add(newDefinition);
+							viableDefs++;
+						}
+		    	}
+		    	
+		    	if (viableDefs < 1) {
+		    		resetAddingWord("Please enter at least one definition with a part of speech...", event);
+		    		event.consume();
+		    	}
+		    	
+		    	if (antField.getText().contains(" ") && !antField.getText().substring(antField.getText().indexOf(" ") - 1, antField.getText().indexOf(" ")).equals(",")) {
+		    		resetAddingWord("Please list antonymns in form:word, word, word", event);
+		    		event.consume();
+		    	}
+		    	if (synField.getText().contains(" ") && !synField.getText().substring(synField.getText().indexOf(" ") - 1, synField.getText().indexOf(" ")).equals(",")) {
+		    		resetAddingWord("Please list synonymns in form:word, word, word", event);
+		    		event.consume();
 		    	}
 		    	Words newWord = null;
-		    	String newSpelling = addSpelling.getText();		  
+		    	String newSpelling = addSpelling.getText();
+
+		    	if (newSpelling.contains(" ") || newSpelling.matches("^.*[^a-zA-Z0-9 ].*$") || newSpelling.isEmpty()) {
+		    		resetAddingWord("Please only use non-empty, alphanumeric characters when entering your word's spelling.", event);
+		    		event.consume();
+		    	} else if (newSpelling.contains(" ") || newSpelling.matches("^.*[^a-zA-Z0-9 ].*$") || newSpelling.isEmpty()){
+		    		
+		    	}else {
 		    	try {
 					newWord = new Words(newSpelling, newDefs, synonyms, antonyms);
 				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 					e.printStackTrace();
 				}
+		    	
 		    	Dictionary.addWord(newWord);
 		    	data.clear();
 				  filterInput.textProperty().addListener(obs->{
@@ -562,6 +594,7 @@ import javafx.scene.paint.Color;
 				display(ascending, ps, scene);
 		    	extraDefs = 0;
 
+		    }
 		    }
 		};
 		
